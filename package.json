@@ -1,0 +1,28 @@
+{
+  "name": "evalencia-stack",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Starter template para aplicaciones SaaS multi-tenant en TypeScript.",
+  "author": "Edward Valencia",
+  "license": "MIT",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @evalencia-stack/web dev",
+    "build": "pnpm --filter @evalencia-stack/web build",
+    "start": "pnpm --filter @evalencia-stack/web start",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "db:generate": "pnpm --filter @evalencia-stack/db generate",
+    "db:push": "pnpm --filter @evalencia-stack/db push",
+    "db:studio": "pnpm --filter @evalencia-stack/db studio",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "typescript": "^5.6.3"
+  }
+}

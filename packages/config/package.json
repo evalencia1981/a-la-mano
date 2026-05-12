@@ -1,0 +1,19 @@
+{
+  "name": "@evalencia-stack/config",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "files": [
+    "tsconfig",
+    "eslint",
+    "tailwind"
+  ],
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
+    "./tsconfig/node.json": "./tsconfig/node.json",
+    "./eslint/base.json": "./eslint/base.json",
+    "./eslint/nextjs.json": "./eslint/nextjs.json",
+    "./tailwind/preset": "./tailwind/preset.css"
+  }
+}

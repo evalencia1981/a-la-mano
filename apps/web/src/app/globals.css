@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/*
+ * Paleta y tokens base — sobre-escribir en cada proyecto si la marca
+ * necesita una identidad distinta. Las variables `--color-accent-*`
+ * se override por tenant en runtime desde `[tenantSlug]/layout.tsx`.
+ */
+@theme {
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-accent-primary: #3b82f6;
+  --color-accent-secondary: #1e40af;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-border: #e5e7eb;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg-primary: #0a0a0a;
+    --color-bg-secondary: #171717;
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #9ca3af;
+    --color-border: #262626;
+  }
+}
+
+html,
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+* {
+  border-color: var(--color-border);
+}

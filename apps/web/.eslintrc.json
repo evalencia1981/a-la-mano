@@ -1,0 +1,3 @@
+{
+  "extends": "@evalencia-stack/config/eslint/nextjs.json"
+}
