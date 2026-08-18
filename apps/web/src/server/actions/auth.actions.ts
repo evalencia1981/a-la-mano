@@ -3,16 +3,24 @@
 import { redirect } from 'next/navigation';
 import { authService, type OAuthProvider } from '@/server/services/auth.service';
 import { listUserTenants } from '@/lib/auth/current-tenant';
+import { memberService } from '@/server/services/member.service';
 import { fail, ok, type ActionResult } from './result';
 
 /**
- * Decide a dónde mandar al user post-login según cuántos tenants tiene.
- * - 0 tenants → /select-tenant?create=true (UI para crear el primero)
- * - 1 tenant  → /[tenantSlug] directo
- * - 2+        → /select-tenant (picker)
+ * Decide a dónde mandar al user post-login.
+ *
+ *  - Tiene invitaciones pendientes (con o sin tenants) → /select-tenant
+ *    para que las acepte explícitamente.
+ *  - 0 tenants y 0 invitaciones → /select-tenant?create=true (crear primera).
+ *  - 1 tenant y 0 invitaciones → /[tenantSlug] directo.
+ *  - 2+ tenants → /select-tenant (picker).
  */
 async function postLoginRedirectTarget(): Promise<string> {
-  const tenants = await listUserTenants();
+  const [tenants, invitations] = await Promise.all([
+    listUserTenants(),
+    memberService.listMyPendingInvitations(),
+  ]);
+  if (invitations.length > 0) return '/select-tenant';
   if (tenants.length === 0) return '/select-tenant?create=true';
   if (tenants.length === 1 && tenants[0]) return `/${tenants[0].tenant.slug}`;
   return '/select-tenant';
@@ -50,8 +58,12 @@ export async function signUpWithPasswordAction(
   }
 }
 
-export async function signInWithOAuthAction(provider: OAuthProvider): Promise<void> {
-  const result = await authService.signInWithOAuth(provider);
+export async function signInWithOAuthAction(
+  provider: OAuthProvider,
+  /** Ruta interna a la que volver después de autenticarse. */
+  destino?: string,
+): Promise<void> {
+  const result = await authService.signInWithOAuth(provider, destino);
   if (result.url) {
     redirect(result.url);
   }

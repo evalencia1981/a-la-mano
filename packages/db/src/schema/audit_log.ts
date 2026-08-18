@@ -12,7 +12,13 @@ import { core } from './tenants';
  */
 export const auditLog = core.table('audit_log', {
   id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull(),
+  /**
+   * Null en acciones de plataforma que no pertenecen a ninguna comunidad,
+   * como crear una categoría global. La RLS filtra por `tenant_id`, así que
+   * esas entradas no las ve ningún admin de comunidad — solo se leen con
+   * service_role desde el panel de plataforma.
+   */
+  tenantId: uuid('tenant_id'),
   userId: uuid('user_id'),
   action: text('action').notNull(),
   resourceType: text('resource_type'),

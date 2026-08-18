@@ -73,8 +73,8 @@ create policy "members write projects" on core.projects
 
 ```typescript
 import 'server-only';
-import { db } from '@evalencia-stack/db';
-import { projects, type NewProject, type Project } from '@evalencia-stack/db';
+import { db } from '@a-la-mano/db';
+import { projects, type NewProject, type Project } from '@a-la-mano/db';
 import { and, desc, eq } from 'drizzle-orm';
 
 export const projectRepository = {
@@ -146,7 +146,7 @@ import { revalidatePath } from 'next/cache';
 import { projectService } from '@/server/services/project.service';
 import { tenantRepository } from '@/server/repositories/tenant.repository';
 import { fail, ok, type ActionResult } from './result';
-import type { Project } from '@evalencia-stack/db';
+import type { Project } from '@a-la-mano/db';
 
 export async function createProjectAction(
   tenantId: string,

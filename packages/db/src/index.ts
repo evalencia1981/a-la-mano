@@ -1,13 +1,24 @@
 export * from './client';
 export * as schema from './schema';
 export {
+  // Core
   tenants,
   profiles,
   tenantMembers,
   tenantInvitations,
   auditLog,
+  // Directory
+  categories,
+  providers,
+  providerPhotos,
+  communityProviders,
+  ratings,
+  suggestions,
+  // Convivencia
+  incidentReports,
 } from './schema';
 export type {
+  // Core
   Tenant,
   NewTenant,
   Profile,
@@ -18,4 +29,20 @@ export type {
   NewTenantInvitation,
   AuditEntry,
   NewAuditEntry,
+  // Directory
+  Category,
+  NewCategory,
+  Provider,
+  NewProvider,
+  ProviderPhoto,
+  NewProviderPhoto,
+  CommunityProvider,
+  NewCommunityProvider,
+  Rating,
+  NewRating,
+  Suggestion,
+  NewSuggestion,
+  // Convivencia
+  IncidentReport,
+  NewIncidentReport,
 } from './schema';

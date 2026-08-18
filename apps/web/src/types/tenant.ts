@@ -1,4 +1,4 @@
-import type { Tenant } from '@evalencia-stack/db';
+import type { Tenant } from '@a-la-mano/db';
 import type { Role } from './role';
 
 /**

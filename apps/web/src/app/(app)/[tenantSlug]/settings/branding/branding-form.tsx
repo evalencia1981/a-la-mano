@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { updateBrandingAction } from '@/server/actions/tenant.actions';
-import type { Tenant } from '@evalencia-stack/db';
+import type { Tenant } from '@a-la-mano/db';
 
 /**
  * Form de branding por tenant. El upload real del logo (al storage de

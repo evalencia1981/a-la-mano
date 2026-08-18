@@ -2,7 +2,8 @@ import 'server-only';
 import { auditRepository } from '@/server/repositories/audit.repository';
 
 export interface AuditPayload {
-  tenantId: string;
+  /** Null para acciones de plataforma sin comunidad (ej. categorías globales). */
+  tenantId: string | null;
   userId?: string | null;
   action: string;
   resourceType?: string;

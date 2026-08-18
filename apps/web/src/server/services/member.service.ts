@@ -3,9 +3,12 @@ import { z } from 'zod';
 import { memberRepository } from '@/server/repositories/member.repository';
 import { userRepository } from '@/server/repositories/user.repository';
 import { auditService } from './audit.service';
-import { assertRole, ForbiddenError } from '@/lib/auth/guards';
+import { assertAuthenticated, assertRole, ForbiddenError } from '@/lib/auth/guards';
+import { tenantRepository } from '@/server/repositories/tenant.repository';
+import type { Tenant, TenantInvitation } from '@a-la-mano/db';
 import { TENANT_ROLES, type Role } from '@/types/role';
 import { generateToken } from '@/lib/utils';
+import { generarCodigoDeIngreso } from '@/lib/join-code';
 
 const inviteSchema = z.object({
   email: z.string().email(),
@@ -103,6 +106,76 @@ export const memberService = {
     });
   },
 
+  /**
+   * Ingreso por el enlace de la comunidad.
+   *
+   * Es el camino masivo: el administrador comparte el enlace en el grupo del
+   * edificio y cada residente entra iniciando sesión con Google. Como quien
+   * llega ya se autenticó, tiene identidad — sin eso no podría calificar,
+   * que es la mitad del producto.
+   *
+   * Quien ya es miembro no se duplica ni cambia de rol: entrar de nuevo por
+   * el enlace es inofensivo.
+   */
+  async joinByCode(code: string, userId: string) {
+    const tenant = await tenantRepository.findByJoinCode(code);
+    if (!tenant) throw new Error('Ese enlace no corresponde a ninguna comunidad.');
+    if (!tenant.joinCodeEnabled) {
+      throw new Error(`${tenant.name} cerró el ingreso por enlace. Pedile acceso al administrador.`);
+    }
+
+    const existente = await memberRepository.findMembership(tenant.id, userId);
+    if (existente) return { tenant, yaEraMiembro: true };
+
+    await memberRepository.addMember({ tenantId: tenant.id, userId, role: 'member' });
+
+    await auditService.log({
+      tenantId: tenant.id,
+      userId,
+      action: 'member.joined_by_link',
+      resourceType: 'membership',
+      resourceId: userId,
+    });
+
+    return { tenant, yaEraMiembro: false };
+  },
+
+  /**
+   * Genera un código nuevo. El anterior deja de funcionar al instante —
+   * es la salida cuando el enlace se filtró fuera del edificio.
+   */
+  async rotateJoinCode(tenantId: string) {
+    const { user } = await assertRole(tenantId, ['owner', 'admin']);
+    const tenant = await tenantRepository.update(tenantId, {
+      joinCode: generarCodigoDeIngreso(),
+    });
+
+    await auditService.log({
+      tenantId,
+      userId: user.id,
+      action: 'tenant.join_code_rotated',
+      resourceType: 'tenant',
+      resourceId: tenantId,
+    });
+
+    return tenant;
+  },
+
+  async setJoinCodeEnabled(tenantId: string, habilitado: boolean) {
+    const { user } = await assertRole(tenantId, ['owner', 'admin']);
+    const tenant = await tenantRepository.update(tenantId, { joinCodeEnabled: habilitado });
+
+    await auditService.log({
+      tenantId,
+      userId: user.id,
+      action: habilitado ? 'tenant.join_code_enabled' : 'tenant.join_code_disabled',
+      resourceType: 'tenant',
+      resourceId: tenantId,
+    });
+
+    return tenant;
+  },
+
   async acceptInvitation(token: string, userId: string) {
     const invitation = await memberRepository.findInvitationByToken(token);
     if (!invitation) throw new Error('Invitación inválida.');
@@ -139,6 +212,28 @@ export const memberService = {
     });
 
     return invitation;
+  },
+
+  /**
+   * Lista las invitaciones pendientes del user actual (matching por email).
+   * Resuelve también el tenant de cada una para mostrar el nombre en UI.
+   */
+  async listMyPendingInvitations(): Promise<
+    Array<{ invitation: TenantInvitation; tenant: Tenant }>
+  > {
+    const user = await assertAuthenticated();
+    const invitations = await memberRepository.listPendingByEmail(user.email);
+    if (invitations.length === 0) return [];
+    const tenants = await Promise.all(
+      invitations.map((inv) => tenantRepository.findById(inv.tenantId)),
+    );
+    return invitations
+      .map((invitation, i) => {
+        const tenant = tenants[i];
+        if (!tenant) return null;
+        return { invitation, tenant };
+      })
+      .filter((row): row is { invitation: TenantInvitation; tenant: Tenant } => row !== null);
   },
 };
 

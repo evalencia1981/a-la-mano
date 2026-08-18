@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   // Transpile workspace packages para que Next pueda resolver TS source.
-  transpilePackages: ['@evalencia-stack/db'],
+  transpilePackages: ['@a-la-mano/db'],
 };
 
 export default nextConfig;

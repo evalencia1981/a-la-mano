@@ -161,7 +161,7 @@ adapter de email después del `createInvitation`.
 - **i18n estructural pero solo español**: el campo `defaultLanguage` ya
   existe en `tenants`. Cuando necesités más idiomas, sumar `next-intl`
   consume ~1 hora.
-- **`@evalencia-stack/*` como namespace**: al renombrar el proyecto se
+- **`@a-la-mano/*` como namespace**: al renombrar el proyecto se
   reemplaza todo el namespace en bloque (ver `06-renaming-the-project.md`).
 - **Schema `core` en Postgres**: aísla del schema `public` (que
   Supabase usa para storage/auth metadata) y permite versionado más

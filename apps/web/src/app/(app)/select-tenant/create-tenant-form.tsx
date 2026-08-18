@@ -37,7 +37,7 @@ export function CreateTenantForm() {
   return (
     <form action={onSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name">Nombre</Label>
+        <Label htmlFor="name">Nombre de la comunidad</Label>
         <Input
           id="name"
           name="name"
@@ -45,7 +45,7 @@ export function CreateTenantForm() {
           onChange={(e) => onNameChange(e.target.value)}
           required
           minLength={2}
-          placeholder="Mi Empresa"
+          placeholder="Conjunto Los Cedros / Iglesia Central / ..."
         />
       </div>
       <div className="space-y-2">
@@ -61,15 +61,28 @@ export function CreateTenantForm() {
           required
           minLength={2}
           pattern="[a-z0-9-]+"
-          placeholder="mi-empresa"
+          placeholder="los-cedros"
         />
         <p className="text-xs text-[var(--color-text-secondary)]">
           Solo minúsculas, números y guiones. Va a ser parte de la URL.
         </p>
       </div>
+      <div className="space-y-2">
+        <Label htmlFor="type">Tipo de comunidad</Label>
+        <select
+          id="type"
+          name="type"
+          defaultValue="residential"
+          className="h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-sm"
+        >
+          <option value="residential">Unidad residencial</option>
+          <option value="religious">Congregación religiosa</option>
+          <option value="group">Otro grupo</option>
+        </select>
+      </div>
       {error && <p className="text-sm text-[var(--color-error)]">{error}</p>}
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? 'Creando...' : 'Crear organización'}
+        {isPending ? 'Creando...' : 'Crear comunidad'}
       </Button>
     </form>
   );

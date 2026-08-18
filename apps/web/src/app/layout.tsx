@@ -1,27 +1,39 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Bricolage_Grotesque, Public_Sans } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
+/*
+ * Dos voces tipográficas:
+ *  - Bricolage Grotesque para nombres y títulos. Tiene rarezas propias
+ *    (terminaciones cortadas, ancho variable) que le dan carácter sin
+ *    perder legibilidad a tamaño grande.
+ *  - Public Sans para texto corrido y datos. Neutra y muy legible en
+ *    pantallas chicas, que es donde se usa el directorio.
+ */
+const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-bricolage',
+  display: 'swap',
+  weight: ['500', '600', '700'],
+});
+
+const publicSans = Public_Sans({
+  subsets: ['latin'],
+  variable: '--font-public-sans',
   display: 'swap',
 });
 
-// Para sumar una mono opcional (ej. para mostrar code), instalar el paquete
-// `geist` y exponer `GeistMono.variable` acá: { variable: '--font-geist-mono' }.
-
 export const metadata: Metadata = {
   title: {
-    default: 'evalencia-stack',
-    template: '%s · evalencia-stack',
+    default: 'A la Mano',
+    template: '%s · A la Mano',
   },
-  description: 'Starter SaaS multi-tenant.',
+  description: 'Directorio privado de servicios para tu comunidad.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="es" className={`${bricolage.variable} ${publicSans.variable}`}>
       <body>{children}</body>
     </html>
   );

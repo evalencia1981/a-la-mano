@@ -1,6 +1,6 @@
 import 'server-only';
 import { cache } from 'react';
-import { db, tenants, tenantMembers } from '@evalencia-stack/db';
+import { db, tenants, tenantMembers } from '@a-la-mano/db';
 import { and, eq } from 'drizzle-orm';
 import { getCurrentUser } from './current-user';
 import { isRole, type Role } from '@/types/role';

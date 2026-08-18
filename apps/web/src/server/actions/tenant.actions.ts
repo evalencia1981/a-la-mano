@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { tenantService } from '@/server/services/tenant.service';
 import { fail, ok, type ActionResult } from './result';
-import type { Tenant } from '@evalencia-stack/db';
+import type { Tenant } from '@a-la-mano/db';
 
 export async function createTenantAction(
   formData: FormData,
@@ -29,8 +29,13 @@ export async function updateTenantAction(
       name: (formData.get('name') as string) || undefined,
       defaultLanguage: (formData.get('defaultLanguage') as string) || undefined,
       timezone: (formData.get('timezone') as string) || undefined,
+      /* Vaciar el campo debe poder borrar la ubicación, así que el string
+       * vacío viaja como null en vez de como undefined. */
+      city: formData.has('city') ? (formData.get('city') as string) || null : undefined,
+      sector: formData.has('sector') ? (formData.get('sector') as string) || null : undefined,
     });
     revalidatePath(`/${tenant.slug}/settings`);
+    revalidatePath(`/${tenant.slug}/admin/recomendados`);
     return ok({ tenant });
   } catch (error) {
     return fail(error);

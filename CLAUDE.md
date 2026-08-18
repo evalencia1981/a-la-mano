@@ -1,56 +1,129 @@
-# CLAUDE.md — evalencia-stack
+# CLAUDE.md — A la Mano
 
-Este repo es el template `evalencia-stack` de Edward Valencia.
-Si estás leyendo esto desde un proyecto clonado, REEMPLAZÁ este archivo
-con el `CLAUDE.md` específico del proyecto.
+Directorio privado de servicios para comunidades cerradas (unidades
+residenciales, congregaciones, grupos). Construido sobre el template
+`evalencia-stack`.
 
-## Reglas inviolables al desarrollar sobre este template
+## Vocabulario del dominio
 
-1. **Toda tabla de feature lleva `tenant_id NOT NULL`** (FK a `core.tenants`).
-2. **Toda RLS policy filtra por `tenant_id`** del user actual via
-   `core.user_tenants(auth.uid())`.
-3. **Toda Server Action llama `assertTenantMember(tenantId)`** o
-   `assertRole(tenantId, [...])` antes de operar.
-4. **TypeScript estricto. Cero `any`.** Sin excepciones. Si necesitás
-   `unknown`, validá con Zod.
-5. **Validación con Zod en bordes** — Server Actions, forms, env vars,
-   payloads externos.
-6. **Arquitectura layered**: Server Action → Service → Repository → Drizzle.
-   No saltarse capas. UI nunca toca Drizzle directo.
-7. **Comentarios en español.** Identificadores en inglés.
-8. **No imports cruzados entre features.** Lo compartido va a `lib/` o
-   `server/services/shared/`. Si dos features necesitan lo mismo, vive
-   en un lugar central, no en una de las dos.
+- **tenant** = comunidad (unidad residencial / iglesia / grupo).
+- **member** = residente / feligrés / integrante.
+- **provider** = proveedor de servicio (plomero, electricista, etc.) — **entidad global**.
+- **community_provider** = asociación entre un tenant y un provider, con rating denormalizado.
+- **rating** = calificación 1-5 estrellas + comentario opcional.
+- **suggestion** = propuesta de un miembro de agregar un proveedor nuevo.
+- **Platform Admin** = user con `profiles.is_platform_admin = true`, gestiona categorías globales y métricas cross-tenant.
+
+## Reglas inviolables
+
+Heredadas del template:
+
+1. Toda tabla de feature lleva `tenant_id NOT NULL`. Excepciones documentadas (ver #5).
+2. Toda RLS policy filtra por `tenant_id` via `core.user_tenants(auth.uid())`.
+3. Toda Server Action llama `assertTenantMember(tenantId)` o `assertRole(tenantId, [...])` antes de operar.
+4. TypeScript estricto. Cero `any`. Validación Zod en bordes.
+5. Layered: Server Action → Service → Repository → Drizzle. No saltarse capas.
+6. Comentarios en español. UI en español.
+7. No imports cruzados entre features. Lo compartido va a `lib/` o `server/services/shared/`.
+
+Específicas de A la Mano:
+
+8. **`directory.providers` y `directory.categories` son entidades GLOBALES** (sin `tenant_id`). El motivo está documentado en cada `schema/*.ts`. RLS de estas tablas usa `auth.role() = 'authenticated'` en vez de filtrado por tenant.
+9. **`directory.provider_photos`** es 1:N con providers, cascade on delete. Máximo 6 fotos por provider (validar en service, NO en RLS).
+10. **Rating denormalizado** (`community_providers.rating_average`, `rating_count`) se mantiene **solo via trigger Postgres** (`directory.update_community_provider_rating`). NUNCA actualizar manualmente desde código.
+11. **`phoneNormalized` es la clave de matching**. Toda inserción de provider pasa por `providerService.findOrCreate(...)` que normaliza y busca antes de crear.
+12. **Fotos en WebP**: el upload se procesa server-side con `sharp` (resize 1920x1080 max, calidad 85) antes de Supabase Storage. Ver `provider-photo.service.ts`.
+
+## Estructura
+
+```
+apps/web/src/
+├── app/
+│   ├── (auth)/                 # login, signup, magic-link
+│   ├── (app)/                  # gate: auth required
+│   │   ├── select-tenant/      # selector + creación de comunidad
+│   │   └── [tenantSlug]/
+│   │       ├── page.tsx        # dashboard de la comunidad
+│   │       ├── directory/      # listado, por categoría, perfil del provider
+│   │       ├── suggest/        # form de sugerencia
+│   │       ├── my-suggestions/
+│   │       ├── admin/          # gate adicional: owner/admin
+│   │       └── settings/       # heredado del template
+│   ├── (platform-admin)/       # gate: is_platform_admin = true
+│   └── api/
+├── components/
+│   ├── provider/               # provider-card, contact-buttons, photo-gallery, rating-*, local-notes
+│   ├── category/               # category-tile, category-grid
+│   ├── suggestion/             # suggestion-form, suggestion-card
+│   ├── wizard/                 # onboarding-checklist
+│   ├── billing/                # trial-banner, past-due-banner
+│   ├── shared/                 # whatsapp-button, instagram-link, nav-shell, ...
+│   └── ui/                     # shadcn primitives
+├── lib/
+│   ├── supabase/               # client, server, middleware, service-role
+│   ├── auth/                   # current-user, current-tenant, guards, platform-admin
+│   ├── contact.ts              # normalizePhone, getWhatsappUrl, getInstagramUrl, getTelUrl
+│   ├── email/                  # Resend stub + templates
+│   └── billing/                # Stripe stub
+├── server/
+│   ├── actions/                # auth, tenant, member, category, provider, photos, ratings, suggestions, billing
+│   ├── services/               # category, provider, photo, community-provider, rating, suggestion, billing, audit
+│   └── repositories/           # uno por entidad, sin lógica de negocio
+└── types/
+```
+
+## Patrones de implementación
+
+### Agregar un feature nuevo del directorio
+
+1. Schema en `packages/db/src/schema/` (con tenant_id si es per-tenant).
+2. RLS policy en `supabase/policies.sql`.
+3. Repository en `apps/web/src/server/repositories/`.
+4. Service en `apps/web/src/server/services/` — con `assertTenantMember` o `assertRole`.
+5. Server Action en `apps/web/src/server/actions/` — devuelve `ActionResult<T>`.
+6. Página/componentes en `apps/web/src/app/(app)/[tenantSlug]/...`.
+
+Ver `docs/03-adding-a-feature.md` (heredado).
+
+### Tocar un provider
+
+- Crear → `providerService.findOrCreate(data, userId)` — normaliza phone + matching.
+- Editar → `providerService.update(id, partialData)`.
+- Asociar a una comunidad → `communityProviderService.addProvider(tenantId, input)`.
+
+### Tocar ratings
+
+- Crear/editar → `ratingService.upsert(tenantId, { communityProviderId, stars, comment })`.
+  El trigger Postgres recalcula el average.
+- Ocultar (moderación) → `ratingService.hide(tenantId, ratingId, reason)`. NO borra el row.
+
+### Subir fotos
+
+- `providerPhotoService.upload(providerId, file)`. La función ya:
+  1. valida mime + tamaño,
+  2. corre por sharp,
+  3. sube a Supabase Storage en `{providerId}/{uuid}.webp`,
+  4. crea el row + marca primary si es la primera.
 
 ## Comandos
 
-- `pnpm dev` — levantar web en localhost:3000
-- `pnpm typecheck` — verificar tipos en todo el monorepo
-- `pnpm db:generate` — generar migración Drizzle desde los schemas
-- `pnpm db:push` — aplicar migraciones a la DB
-- `pnpm db:studio` — abrir Drizzle Studio (UI para inspeccionar la DB)
-- `pnpm lint` — eslint
-- `pnpm format` — prettier
+- `pnpm dev` — web en localhost:3000
+- `pnpm typecheck` — tsc en todo el monorepo
+- `pnpm db:generate` — generar migración
+- `pnpm db:push` — aplicar a DB
+- `pnpm db:studio` — UI de Drizzle
 
-## Estructura mental rápida
+## Stubs pendientes de cambiar por integración real
 
-- ¿Validación de datos del user? → Zod en el **service**, no en la action.
-- ¿Autorización? → `assertTenantMember` o `assertRole` en el **service**.
-- ¿RLS policy nueva? → patrón estándar de `supabase/policies.sql`.
-- ¿Nuevo Server Action? → wrapper sobre el service, retorna `ActionResult<T>`.
-- ¿Auditar una acción? → `auditService.log({...})` en el service, dentro
-  del try del happy path.
-
-## Cómo agregar un feature
-
-Ver [`docs/03-adding-a-feature.md`](./docs/03-adding-a-feature.md). Incluye un
-prompt copy-paste-ready.
+- `apps/web/src/lib/billing/stripe.ts` → reemplazar por SDK de Stripe.
+- `apps/web/src/lib/email/resend.ts` → reemplazar por SDK de Resend.
+- `apps/web/src/app/api/billing/mock-checkout/route.ts` → borrar cuando Stripe esté listo.
+- `apps/web/src/server/services/billing.service.ts` → conectar handlers reales de webhook.
 
 ## Cosas que NO hacer
 
-- No mockear la DB en tests. Si testeás algo del template, usá una DB
-  real (Supabase local o un schema scratch).
-- No agregar dependencias sin justificarlas en el PR.
-- No introducir capas nuevas (sagas, command handlers, etc) sin discusión.
-- No hardcodear nombres del negocio en el template — todo debe ser
-  genérico, reusable.
+- Actualizar `rating_average` o `rating_count` manualmente (el trigger lo hace).
+- Saltearse `providerService.findOrCreate` y `INSERT INTO directory.providers` directo (rompe el matching por phoneNormalized).
+- Subir fotos sin pasar por sharp (cualquier formato/peso entraría a Storage).
+- Borrar ratings problemáticos — usar `hideRating` (auditable).
+- Crear categorías directo desde código de members — solo Platform Admin.

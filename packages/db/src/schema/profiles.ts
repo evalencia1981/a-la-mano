@@ -1,4 +1,4 @@
-import { text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { core } from './tenants';
 
 /**
@@ -11,6 +11,8 @@ export const profiles = core.table('profiles', {
   email: text('email').notNull(),
   fullName: text('full_name'),
   avatarUrl: text('avatar_url'),
+  /** A la Mano: bypassea checks de tenant — gestiona categorías globales y métricas. */
+  isPlatformAdmin: boolean('is_platform_admin').default(false).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 

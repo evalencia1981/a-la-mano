@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import type { Tenant } from '@evalencia-stack/db';
+import type { Tenant } from '@a-la-mano/db';
 
 interface Props {
   current: Tenant;

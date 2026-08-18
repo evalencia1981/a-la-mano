@@ -1,5 +1,5 @@
 import 'server-only';
-import { db, tenantMembers } from '@evalencia-stack/db';
+import { db, tenantMembers } from '@a-la-mano/db';
 import { and, eq } from 'drizzle-orm';
 import { getCurrentUser } from './current-user';
 import { isRole, type Role } from '@/types/role';

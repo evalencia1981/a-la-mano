@@ -1,7 +1,7 @@
 import 'server-only';
 import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
-import { db, profiles } from '@evalencia-stack/db';
+import { db, profiles } from '@a-la-mano/db';
 import { eq } from 'drizzle-orm';
 import type { CurrentUser } from '@/types';
 

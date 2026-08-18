@@ -15,23 +15,23 @@ otra cosa. Son ~5 minutos.
 Reemplazar **en todo el repo**:
 
 ```
-@evalencia-stack/  →  @<paquete>/
+@a-la-mano/  →  @<paquete>/
 ```
 
 Archivos afectados (verificá):
 
-- `apps/web/package.json` → `name`, `dependencies.@evalencia-stack/*`
+- `apps/web/package.json` → `name`, `dependencies.@a-la-mano/*`
 - `packages/db/package.json` → `name`
 - `packages/config/package.json` → `name`
 - `apps/web/tsconfig.json` → `extends`
-- Imports en código (`import { db } from '@evalencia-stack/db'` → `@<paquete>/db`)
+- Imports en código (`import { db } from '@a-la-mano/db'` → `@<paquete>/db`)
 
 Comando rápido (PowerShell):
 
 ```powershell
 Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch 'node_modules|\.next' } |
   ForEach-Object {
-    (Get-Content $_.FullName -Raw) -replace '@evalencia-stack/', '@<paquete>/' |
+    (Get-Content $_.FullName -Raw) -replace '@a-la-mano/', '@<paquete>/' |
       Set-Content $_.FullName
   }
 ```
@@ -39,8 +39,8 @@ Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch 'node_module
 Linux/Mac:
 
 ```bash
-grep -rl '@evalencia-stack/' --exclude-dir=node_modules --exclude-dir=.next . |
-  xargs sed -i '' 's|@evalencia-stack/|@<paquete>/|g'
+grep -rl '@a-la-mano/' --exclude-dir=node_modules --exclude-dir=.next . |
+  xargs sed -i '' 's|@a-la-mano/|@<paquete>/|g'
 ```
 
 ## 2. Nombre del root package
@@ -48,7 +48,7 @@ grep -rl '@evalencia-stack/' --exclude-dir=node_modules --exclude-dir=.next . |
 `package.json` (raíz):
 
 ```diff
--  "name": "evalencia-stack",
+-  "name": "a-la-mano",
 +  "name": "<paquete>",
 ```
 

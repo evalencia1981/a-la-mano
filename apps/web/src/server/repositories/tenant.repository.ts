@@ -1,5 +1,5 @@
 import 'server-only';
-import { db, tenants, type NewTenant, type Tenant } from '@evalencia-stack/db';
+import { db, tenants, type NewTenant, type Tenant } from '@a-la-mano/db';
 import { eq } from 'drizzle-orm';
 
 /**
@@ -14,6 +14,16 @@ export const tenantRepository = {
 
   async findBySlug(slug: string): Promise<Tenant | null> {
     const [row] = await db.select().from(tenants).where(eq(tenants.slug, slug)).limit(1);
+    return row ?? null;
+  },
+
+  /** Busca por el código del enlace de ingreso. Case-insensitive. */
+  async findByJoinCode(code: string): Promise<Tenant | null> {
+    const [row] = await db
+      .select()
+      .from(tenants)
+      .where(eq(tenants.joinCode, code.trim().toUpperCase()))
+      .limit(1);
     return row ?? null;
   },
 

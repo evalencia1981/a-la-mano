@@ -1,5 +1,5 @@
 import 'server-only';
-import { db, profiles, type Profile } from '@evalencia-stack/db';
+import { db, profiles, type Profile } from '@a-la-mano/db';
 import { eq } from 'drizzle-orm';
 
 export const userRepository = {

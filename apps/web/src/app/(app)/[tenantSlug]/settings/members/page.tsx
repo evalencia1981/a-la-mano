@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { getCurrentTenant } from '@/lib/auth/current-tenant';
 import { memberService } from '@/server/services/member.service';
 import { InviteMemberForm } from './invite-form';
+import { JoinLink } from './join-link';
 import { MembersTable } from './members-table';
 
 export const metadata = { title: 'Miembros' };
@@ -31,10 +32,30 @@ export default async function MembersPage({ params }: Props) {
       {canManage && (
         <Card>
           <CardHeader>
-            <CardTitle>Invitar miembro</CardTitle>
+            <CardTitle>Enlace de ingreso</CardTitle>
             <CardDescription>
-              Mandamos un token al email. (Mientras el envío automático no esté configurado, el
-              token se loggea en consola del server para uso en dev.)
+              La forma práctica de sumar a los residentes: compartís un enlace y cada quien
+              entra con su cuenta de Google.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <JoinLink
+              tenantId={current.tenant.id}
+              codigo={current.tenant.joinCode}
+              habilitado={current.tenant.joinCodeEnabled}
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      {canManage && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Invitar por correo</CardTitle>
+            <CardDescription>
+              Para casos puntuales, como sumar a otro administrador. Ojo: el envío de correos
+              todavía no está conectado, así que por ahora el enlace de invitación queda en la
+              consola del servidor y hay que pasarlo a mano.
             </CardDescription>
           </CardHeader>
           <CardContent>

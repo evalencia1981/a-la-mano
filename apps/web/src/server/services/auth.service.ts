@@ -21,6 +21,15 @@ export type OAuthProvider = 'google' | 'github';
 const SUPPORTED_PROVIDERS: OAuthProvider[] = ['google', 'github'];
 
 /**
+ * Una ruta interna arranca con `/` y no con `//`. Lo segundo el navegador lo
+ * lee como protocolo relativo (`//evil.com` va a otro dominio), así que
+ * verificar solo la primera barra no alcanza.
+ */
+export function esRutaInterna(destino: string): boolean {
+  return destino.startsWith('/') && !destino.startsWith('//');
+}
+
+/**
  * Capa fina sobre `supabase.auth`. No mete lógica de negocio: solo
  * normaliza errores y centraliza el redirectTo.
  */
@@ -48,16 +57,26 @@ export const authService = {
     return data;
   },
 
-  async signInWithOAuth(provider: OAuthProvider) {
+  /**
+   * `destino` es a dónde volver después de autenticarse — lo usa el enlace
+   * de ingreso a una comunidad, que necesita retomar el ingreso una vez que
+   * la persona inició sesión.
+   *
+   * Solo se aceptan rutas internas: una URL absoluta acá sería un redirect
+   * abierto, que sirve para armar phishing con nuestro dominio.
+   */
+  async signInWithOAuth(provider: OAuthProvider, destino?: string) {
     if (!SUPPORTED_PROVIDERS.includes(provider)) {
       throw new Error(`Provider OAuth no soportado: ${provider}`);
     }
     const supabase = await createClient();
+    const callback = new URL(`${env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`);
+    if (destino && esRutaInterna(destino)) {
+      callback.searchParams.set('next', destino);
+    }
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: {
-        redirectTo: `${env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`,
-      },
+      options: { redirectTo: callback.toString() },
     });
     if (error) throw new Error(error.message);
     return data;

@@ -1,5 +1,5 @@
 {
-  "name": "@evalencia-stack/db",
+  "name": "@a-la-mano/db",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -13,6 +13,7 @@
   "scripts": {
     "generate": "drizzle-kit generate",
     "push": "drizzle-kit push",
+    "migrate": "node apply-migrations.mjs",
     "studio": "drizzle-kit studio",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
@@ -22,8 +23,9 @@
     "postgres": "^3.4.5"
   },
   "devDependencies": {
-    "@evalencia-stack/config": "workspace:*",
+    "@a-la-mano/config": "workspace:*",
     "@types/node": "^22.9.0",
+    "dotenv": "^16.4.5",
     "drizzle-kit": "^0.28.1",
     "typescript": "^5.6.3"
   }

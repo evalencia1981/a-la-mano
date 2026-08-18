@@ -1,33 +1,75 @@
 @import "tailwindcss";
 
 /*
- * Paleta y tokens base — sobre-escribir en cada proyecto si la marca
- * necesita una identidad distinta. Las variables `--color-accent-*`
- * se override por tenant en runtime desde `[tenantSlug]/layout.tsx`.
+ * Identidad visual de A la Mano.
+ *
+ * Concepto: el fichero de la portería. La app reemplaza a la hoja pegada en
+ * la cartelera con los teléfonos de confianza de la unidad, así que las
+ * fichas se leen como fichas: pestaña de color por grupo de servicio,
+ * nombre grande, y el contacto siempre a la vista.
+ *
+ * OJO con el acento: `--color-accent-primary/secondary` los pisa cada
+ * comunidad en runtime desde `TenantThemeProvider`. No colgar de ellos la
+ * identidad del producto — el acento es el color de la comunidad, no el
+ * nuestro. Lo nuestro son los neutrales verdosos, la tipografía y la
+ * estructura de la ficha.
  */
 @theme {
+  /* Neutrales: blanco con una gota de verde, no gris azulado de fábrica. */
   --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f9fafb;
-  --color-accent-primary: #3b82f6;
-  --color-accent-secondary: #1e40af;
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-border: #e5e7eb;
-  --color-success: #10b981;
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
+  --color-bg-secondary: #f2f5f3;
+  --color-text-primary: #0f1f1a;
+  --color-text-secondary: #5c6b65;
+  --color-border: #dbe2de;
 
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  /* Acento por defecto (una comunidad sin branding propio hereda esto). */
+  --color-accent-primary: #0e5c43;
+  --color-accent-secondary: #0a4432;
+
+  --color-success: #0e7a4a;
+  --color-error: #c02626;
+  --color-warning: #b45309;
+
+  /* Urgencias 24h. Aparece SOLO ahí — si se usa de adorno deja de avisar. */
+  --color-urgencia: #d9480f;
+  --color-urgencia-suave: #fdf0e9;
+
+  /* Ámbar de las calificaciones. Más profundo que el amarillo de fábrica
+   * para que sobre blanco no se lave. */
+  --color-estrella: #d99408;
+
+  /*
+   * Un color por grupo de categoría (`categories.group_name`). Es la pestaña
+   * lateral de cada ficha: codifica información que ya existe en la base, no
+   * es decoración. Ver `lib/category-groups.ts`.
+   */
+  --color-grupo-hogar: #0e5c43;
+  --color-grupo-limpieza: #1d6a8c;
+  --color-grupo-exterior: #4b7a1f;
+  --color-grupo-comunidad: #6b4ea0;
+  --color-grupo-otros: #8a6a3b;
+
+  --font-sans: var(--font-public-sans), system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-public-sans), system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg-primary: #0a0a0a;
-    --color-bg-secondary: #171717;
-    --color-text-primary: #f9fafb;
-    --color-text-secondary: #9ca3af;
-    --color-border: #262626;
+    --color-bg-primary: #0b1512;
+    --color-bg-secondary: #14201c;
+    --color-text-primary: #eef2f0;
+    --color-text-secondary: #97a59e;
+    --color-border: #24322d;
+
+    --color-urgencia: #ff7a45;
+    --color-urgencia-suave: #2a1810;
+    --color-estrella: #f0b429;
+
+    --color-grupo-hogar: #3fa583;
+    --color-grupo-limpieza: #57a8c9;
+    --color-grupo-exterior: #8cbf58;
+    --color-grupo-comunidad: #a68fd6;
+    --color-grupo-otros: #c4a06b;
   }
 }
 
@@ -36,8 +78,33 @@ body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
   border-color: var(--color-border);
+}
+
+/* Los datos (calificaciones, teléfonos, cantidades) no deben bailar. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* En móvil se navega con el pulgar: nada táctil por debajo de 44px. */
+@media (pointer: coarse) {
+  a[data-tactil],
+  button[data-tactil] {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

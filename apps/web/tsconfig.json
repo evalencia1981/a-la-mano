@@ -1,5 +1,5 @@
 {
-  "extends": "@evalencia-stack/config/tsconfig/nextjs.json",
+  "extends": "@a-la-mano/config/tsconfig/nextjs.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

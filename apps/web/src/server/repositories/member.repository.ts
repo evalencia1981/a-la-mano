@@ -8,7 +8,7 @@ import {
   type NewTenantMember,
   type TenantInvitation,
   type TenantMember,
-} from '@evalencia-stack/db';
+} from '@a-la-mano/db';
 import { and, eq } from 'drizzle-orm';
 
 export interface MemberWithProfile {
@@ -88,5 +88,19 @@ export const memberRepository = {
 
   async listInvitations(tenantId: string): Promise<TenantInvitation[]> {
     return db.select().from(tenantInvitations).where(eq(tenantInvitations.tenantId, tenantId));
+  },
+
+  /**
+   * Invitaciones pendientes (no aceptadas y no vencidas) para un email.
+   * Usado por `/select-tenant` para mostrarle al user todas las invitaciones
+   * que tiene esperando, después del signup.
+   */
+  async listPendingByEmail(email: string): Promise<TenantInvitation[]> {
+    const rows = await db
+      .select()
+      .from(tenantInvitations)
+      .where(eq(tenantInvitations.email, email.toLowerCase()));
+    const now = new Date();
+    return rows.filter((r) => !r.acceptedAt && r.expiresAt > now);
   },
 };

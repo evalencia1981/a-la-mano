@@ -82,7 +82,7 @@ Agregá una ruta `/api/health` que pingee la DB:
 
 ```typescript
 // app/api/health/route.ts
-import { db } from '@evalencia-stack/db';
+import { db } from '@a-la-mano/db';
 import { sql } from 'drizzle-orm';
 
 export async function GET() {

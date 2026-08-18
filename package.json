@@ -1,5 +1,5 @@
 {
-  "name": "evalencia-stack",
+  "name": "a-la-mano",
   "version": "0.1.0",
   "private": true,
   "description": "Starter template para aplicaciones SaaS multi-tenant en TypeScript.",
@@ -10,14 +10,18 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "pnpm --filter @evalencia-stack/web dev",
-    "build": "pnpm --filter @evalencia-stack/web build",
-    "start": "pnpm --filter @evalencia-stack/web start",
+    "dev": "pnpm --filter @a-la-mano/web dev",
+    "build": "pnpm --filter @a-la-mano/web build",
+    "start": "pnpm --filter @a-la-mano/web start",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
-    "db:generate": "pnpm --filter @evalencia-stack/db generate",
-    "db:push": "pnpm --filter @evalencia-stack/db push",
-    "db:studio": "pnpm --filter @evalencia-stack/db studio",
+    "db:generate": "pnpm --filter @a-la-mano/db generate",
+    "db:push": "pnpm --filter @a-la-mano/db push",
+    "db:migrate": "pnpm --filter @a-la-mano/db migrate",
+    "db:sql": "pnpm --filter @a-la-mano/db exec node apply-sql.mjs",
+    "db:bootstrap": "pnpm --filter @a-la-mano/db exec node bootstrap.mjs",
+    "db:seed-demo": "pnpm --filter @a-la-mano/db exec node seed-demo.mjs",
+    "db:studio": "pnpm --filter @a-la-mano/db studio",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 /*
  * Preset Tailwind v4 base de evalencia-stack.
  * Importar desde apps/web/src/app/globals.css con:
- *   @import "@evalencia-stack/config/tailwind/preset";
+ *   @import "@a-la-mano/config/tailwind/preset";
  *
  * Define la paleta neutral default. Cada proyecto puede override
  * sus variables en globals.css después del import.

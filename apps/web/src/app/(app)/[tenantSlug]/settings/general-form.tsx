@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { updateTenantAction } from '@/server/actions/tenant.actions';
-import type { Tenant } from '@evalencia-stack/db';
+import type { Tenant } from '@a-la-mano/db';
 
 export function GeneralSettingsForm({ tenant, disabled }: { tenant: Tenant; disabled: boolean }) {
   const router = useRouter();
@@ -34,6 +34,34 @@ export function GeneralSettingsForm({ tenant, disabled }: { tenant: Tenant; disa
         <Label htmlFor="name">Nombre</Label>
         <Input id="name" name="name" defaultValue={tenant.name} required disabled={disabled} />
       </div>
+      {/* La ubicación es lo que habilita recomendar proveedores de unidades
+          vecinas. Sin ciudad, esa pantalla no tiene con qué buscar. */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="city">Ciudad</Label>
+          <Input
+            id="city"
+            name="city"
+            defaultValue={tenant.city ?? ''}
+            placeholder="Medellín"
+            disabled={disabled}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="sector">Sector o barrio</Label>
+          <Input
+            id="sector"
+            name="sector"
+            defaultValue={tenant.sector ?? ''}
+            placeholder="Laureles"
+            disabled={disabled}
+          />
+        </div>
+      </div>
+      <p className="-mt-2 text-xs text-[var(--color-text-secondary)]">
+        Se usa para recomendarte proveedores probados por comunidades cercanas.
+      </p>
+
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="defaultLanguage">Idioma</Label>

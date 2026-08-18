@@ -22,6 +22,13 @@ export const tenantMembers = core.table(
       .notNull()
       .references(() => profiles.id, { onDelete: 'cascade' }),
     role: text('role').notNull().default('member'),
+    /**
+     * A la Mano: 'active' | 'inactive'. Inactive marca ex-miembros para que
+     * sus ratings aparezcan con badge "Ex-miembro" pero no se borren.
+     */
+    status: text('status').notNull().default('active'),
+    removedAt: timestamp('removed_at', { withTimezone: true }),
+    removedBy: uuid('removed_by').references(() => profiles.id),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({

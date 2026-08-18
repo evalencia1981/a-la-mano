@@ -1,5 +1,5 @@
 {
-  "extends": "@evalencia-stack/config/tsconfig/node.json",
+  "extends": "@a-la-mano/config/tsconfig/node.json",
   "compilerOptions": {
     "noEmit": true
   },

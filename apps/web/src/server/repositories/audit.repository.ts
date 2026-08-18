@@ -1,5 +1,5 @@
 import 'server-only';
-import { auditLog, db, type AuditEntry, type NewAuditEntry } from '@evalencia-stack/db';
+import { auditLog, db, type AuditEntry, type NewAuditEntry } from '@a-la-mano/db';
 import { desc, eq } from 'drizzle-orm';
 
 export const auditRepository = {
