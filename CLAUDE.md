@@ -14,6 +14,9 @@ residenciales, congregaciones, grupos). Construido sobre el template
 - **suggestion** = propuesta de un miembro de agregar un proveedor nuevo.
 - **Platform Admin** = user con `profiles.is_platform_admin = true`, gestiona categorías globales y métricas cross-tenant.
 - **location** = lugar del mapa físico de la comunidad. Tres tipos: `torre`, `piso` (cuelga de una torre) y `zona` (común, siempre raíz).
+- **position** = puesto de trabajo de la comunidad (portería, aseo, mantenimiento). Lleva el teléfono de la **línea del puesto**, no el de una persona.
+- **task** = pendiente del administrador. Distinto de `incident_report`: ahí el vecino reporta y la administración recibe; acá la administración reporta y el puesto recibe.
+- **dispatch** = envío de una tarea a un puesto, con el token que abre esa tarea sin cuenta.
 
 ## Reglas inviolables
 
@@ -36,6 +39,10 @@ Específicas de A la Mano:
 12. **Fotos en WebP**: el upload se procesa server-side con `sharp` (resize 1920x1080 max, calidad 85) antes de Supabase Storage. Ver `provider-photo.service.ts`.
 13. **El mapa de la unidad lo carga el administrador**, y un reporte **NUNCA se bloquea** por mencionar un lugar que no está cargado: se guarda con el texto crudo, `location_id` queda en null, y el lugar aparece en la lista de pendientes por mapear del admin. Un reporte sin ubicación exacta sirve; uno que la app se negó a recibir, no.
 14. **`normalizarLugar` es la clave de matching de lugares** (mismo rol que `phoneNormalized` en providers). Convierte números dictados: "Torre Uno" y "torre 1" caen en la misma torre. Sin fuzzy a propósito — adivinar mal el lugar de un reporte contamina una estadística que después se le presenta al consejo.
+15. **Una tarea se asigna al PUESTO, nunca a la persona.** El portero rota por turnos: asignada a quien salió a las dos de la tarde, no la atiende nadie. Por eso el teléfono vive en `positions` y no en un miembro.
+16. **Lo único obligatorio de una tarea es `title`.** Sin puesto, sin lugar, sin descripción, se guarda igual. Un pendiente incompleto sirve; uno que la app se negó a recibir vuelve al audio de WhatsApp y de ahí no vuelve.
+17. **`suspendido` exige motivo.** Es la única validación rígida del módulo de pendientes, y responde la pregunta que el administrador repitió tres veces: "si no lo atendieron, ¿por qué?".
+18. **`/tarea/[token]` es la única ruta pública que muta datos.** No lleva `assertTenantMember` a propósito: la autorización es el token, que `taskService` valida en cada llamada (vigencia, revocación, estado). Abre una tarea y nada más.
 
 ## Estructura
 
@@ -132,3 +139,6 @@ Ver `docs/03-adding-a-feature.md` (heredado).
 - Crear categorías directo desde código de members — solo Platform Admin.
 - Insertar en `convivencia.locations` sin pasar por `locationService.crear` (rompe el matching por `normalized` y el enganche de los reportes que venían mencionando ese lugar en texto libre).
 - Borrar un lugar con reportes — usar `cambiarEstado(..., false)` para darlo de baja y no perder el historial.
+- Asignar una tarea a un `profile`. Se asigna al `position`. Si aparece la necesidad de saber quién la hizo, eso va en la bitácora (`task_updates.author_label`), no en la tarea.
+- Actualizar `tasks.status` directo. Pasa por `taskService.cambiarEstado` o `actualizarPorToken`, que son los que escriben la bitácora — un estado sin movimiento registrado deja la tarea sin explicación.
+- Reusar un token de despacho para otra tarea. Se emite uno por despacho y se revoca por separado.

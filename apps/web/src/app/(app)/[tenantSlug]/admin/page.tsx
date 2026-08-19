@@ -4,6 +4,7 @@ import { ChevronRight, MapPin, Sparkles } from 'lucide-react';
 import { getCurrentTenant } from '@/lib/auth/current-tenant';
 import { communityProviderService } from '@/server/services/community-provider.service';
 import { incidentService } from '@/server/services/incident.service';
+import { taskService } from '@/server/services/task.service';
 import { locationService } from '@/server/services/location.service';
 import { suggestionService } from '@/server/services/suggestion.service';
 import { memberService } from '@/server/services/member.service';
@@ -24,6 +25,7 @@ export default async function AdminDashboardPage({ params }: Props) {
     recomendados,
     reportesPendientes,
     lugaresSinMapear,
+    pendientesAbiertos,
   ] = await Promise.all([
     communityProviderService.listInTenantAdmin(current.tenant.id),
     suggestionService.listPending(current.tenant.id),
@@ -31,9 +33,15 @@ export default async function AdminDashboardPage({ params }: Props) {
     communityProviderService.listRecomendados(current.tenant.id),
     incidentService.countSinResolver(current.tenant.id),
     locationService.listSinMapear(current.tenant.id),
+    taskService.countAbiertas(current.tenant.id),
   ]);
 
   const metricas = [
+    {
+      label: 'Pendientes abiertos',
+      valor: pendientesAbiertos,
+      href: `/${tenantSlug}/admin/pendientes`,
+    },
     {
       label: 'Proveedores activos',
       valor: proveedores.filter((p) => p.communityProvider.isActive).length,

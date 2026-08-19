@@ -17,6 +17,10 @@ export {
   // Convivencia
   locations,
   incidentReports,
+  positions,
+  tasks,
+  taskUpdates,
+  taskDispatches,
 } from './schema';
 export type {
   // Core
@@ -48,4 +52,12 @@ export type {
   NewLocation,
   IncidentReport,
   NewIncidentReport,
+  Position,
+  NewPosition,
+  Task,
+  NewTask,
+  TaskUpdate,
+  NewTaskUpdate,
+  TaskDispatch,
+  NewTaskDispatch,
 } from './schema';

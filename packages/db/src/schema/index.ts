@@ -19,3 +19,5 @@ export * from './suggestions';
 export * from './_convivencia';
 export * from './locations';
 export * from './incident_reports';
+export * from './positions';
+export * from './tasks';

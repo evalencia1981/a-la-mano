@@ -30,11 +30,25 @@ export function getWhatsappUrl(
     provider.isWhatsapp && provider.phoneNormalized
       ? provider.phoneNormalized
       : provider.whatsappNormalized;
-  if (!numero) return null;
+  return getWhatsappUrlDeNumero(numero, mensaje);
+}
+
+/**
+ * La misma URL pero a partir de un número suelto, sin provider de por medio.
+ *
+ * La usa el despacho de pendientes: el destinatario es la línea de un puesto
+ * de trabajo —el celular que está en la portería— y eso no es un proveedor
+ * del directorio.
+ */
+export function getWhatsappUrlDeNumero(
+  numeroNormalizado: string | null | undefined,
+  mensaje?: string | null,
+): string | null {
+  if (!numeroNormalizado) return null;
   const texto = mensaje?.trim();
   return texto
-    ? `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`
-    : `https://wa.me/${numero}`;
+    ? `https://wa.me/${numeroNormalizado}?text=${encodeURIComponent(texto)}`
+    : `https://wa.me/${numeroNormalizado}`;
 }
 
 /**

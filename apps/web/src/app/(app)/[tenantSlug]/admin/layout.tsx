@@ -20,9 +20,12 @@ export default async function AdminLayout({ params, children }: Props) {
   const base = `/${tenantSlug}/admin`;
   const links = [
     { href: base, label: 'Dashboard' },
+    /* Segundo y no último: es la pantalla que se abre cien veces por día. */
+    { href: `${base}/pendientes`, label: 'Pendientes' },
     { href: `${base}/providers`, label: 'Proveedores' },
     { href: `${base}/suggestions`, label: 'Sugerencias' },
     { href: `${base}/lugares`, label: 'Mapa de la unidad' },
+    { href: `${base}/puestos`, label: 'Puestos de trabajo' },
     { href: `${base}/billing`, label: 'Facturación' },
   ];
 
