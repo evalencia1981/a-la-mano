@@ -16,4 +16,6 @@ export * from './ratings';
 export * from './suggestions';
 
 // Convivencia (A la Mano).
+export * from './_convivencia';
+export * from './locations';
 export * from './incident_reports';

@@ -22,6 +22,7 @@ export async function crearReporteAction(
   try {
     const reporte = await incidentService.crear(tenantId, {
       type: String(formData.get('type') ?? ''),
+      locationId: (formData.get('locationId') as string) || null,
       location: (formData.get('location') as string) || null,
       description: (formData.get('description') as string) || null,
     });

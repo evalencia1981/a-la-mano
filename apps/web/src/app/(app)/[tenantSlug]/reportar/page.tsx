@@ -3,6 +3,7 @@ import { ReporteForm } from './reporte-form';
 import { getCurrentTenant } from '@/lib/auth/current-tenant';
 import { ESTADOS_INCIDENTE, etiquetaIncidente, type EstadoIncidente } from '@/lib/incident-types';
 import { incidentService } from '@/server/services/incident.service';
+import { locationService } from '@/server/services/location.service';
 
 export const metadata = { title: 'Reportar' };
 
@@ -15,7 +16,12 @@ export default async function ReportarPage({ params }: Props) {
   const current = await getCurrentTenant(tenantSlug);
   if (!current) notFound();
 
-  const mios = await incidentService.listMios(current.tenant.id);
+  const [mios, mapa] = await Promise.all([
+    incidentService.listMios(current.tenant.id),
+    locationService.mapa(current.tenant.id),
+  ]);
+
+  const esAdmin = current.role === 'owner' || current.role === 'admin';
 
   return (
     <div className="mx-auto max-w-lg space-y-8">
@@ -27,7 +33,15 @@ export default async function ReportarPage({ params }: Props) {
         </p>
       </header>
 
-      <ReporteForm tenantId={current.tenant.id} />
+      <ReporteForm
+        tenantId={current.tenant.id}
+        esAdmin={esAdmin}
+        torres={mapa.torres.map((t) => ({
+          lugar: { id: t.lugar.id, name: t.lugar.name },
+          hijos: t.hijos.map((h) => ({ id: h.id, name: h.name })),
+        }))}
+        zonas={mapa.zonas.map((z) => ({ id: z.id, name: z.name }))}
+      />
 
       {mios.length > 0 && (
         <section className="space-y-3 border-t border-[var(--color-border)] pt-6">

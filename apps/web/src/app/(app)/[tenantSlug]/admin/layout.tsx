@@ -22,6 +22,7 @@ export default async function AdminLayout({ params, children }: Props) {
     { href: base, label: 'Dashboard' },
     { href: `${base}/providers`, label: 'Proveedores' },
     { href: `${base}/suggestions`, label: 'Sugerencias' },
+    { href: `${base}/lugares`, label: 'Mapa de la unidad' },
     { href: `${base}/billing`, label: 'Facturación' },
   ];
 

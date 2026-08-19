@@ -15,6 +15,7 @@ export {
   ratings,
   suggestions,
   // Convivencia
+  locations,
   incidentReports,
 } from './schema';
 export type {
@@ -43,6 +44,8 @@ export type {
   Suggestion,
   NewSuggestion,
   // Convivencia
+  Location,
+  NewLocation,
   IncidentReport,
   NewIncidentReport,
 } from './schema';

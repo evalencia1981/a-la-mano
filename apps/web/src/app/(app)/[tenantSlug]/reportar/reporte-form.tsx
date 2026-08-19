@@ -6,6 +6,7 @@ import { Check, Send } from 'lucide-react';
 import { iconoDe } from '@/lib/category-icons';
 import { TIPOS_INCIDENTE, type TipoIncidente } from '@/lib/incident-types';
 import { crearReporteAction } from '@/server/actions/incident.actions';
+import { SelectorLugar, type OpcionLugar, type TorreConPisos } from './selector-lugar';
 
 /**
  * Reportar algo que pasó en la comunidad.
@@ -16,7 +17,16 @@ import { crearReporteAction } from '@/server/actions/incident.actions';
  * formulario largo, la gente seguiría escribiendo en el grupo de WhatsApp,
  * que es exactamente lo que queremos reemplazar.
  */
-export function ReporteForm({ tenantId }: { tenantId: string }) {
+interface Props {
+  tenantId: string;
+  /** El mapa de la comunidad, para elegir el lugar sin teclear. */
+  torres: TorreConPisos[];
+  zonas: OpcionLugar[];
+  /** Owner o admin: puede agregar un lugar al mapa sin salir del reporte. */
+  esAdmin: boolean;
+}
+
+export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
   const router = useRouter();
   const [tipo, setTipo] = useState<TipoIncidente | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -97,21 +107,12 @@ export function ReporteForm({ tenantId }: { tenantId: string }) {
             {tipo.ejemplo}
           </p>
 
-          <div className="space-y-1.5">
-            <label htmlFor="location" className="text-sm font-medium">
-              ¿Dónde? <span className="font-normal text-[var(--color-text-secondary)]">(opcional)</span>
-            </label>
-            <input
-              id="location"
-              name="location"
-              maxLength={120}
-              placeholder="Torre 2, parqueadero sótano 1, gimnasio…"
-              className="h-12 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
-            />
-            <p className="text-xs text-[var(--color-text-secondary)]">
-              Cuanto más preciso, mejor: es lo que permite ver dónde se repite.
-            </p>
-          </div>
+          <SelectorLugar
+            tenantId={tenantId}
+            esAdmin={esAdmin}
+            torres={torres}
+            zonas={zonas}
+          />
 
           <div className="space-y-1.5">
             <label htmlFor="description" className="text-sm font-medium">

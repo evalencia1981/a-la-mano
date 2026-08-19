@@ -13,6 +13,7 @@ residenciales, congregaciones, grupos). Construido sobre el template
 - **rating** = calificación 1-5 estrellas + comentario opcional.
 - **suggestion** = propuesta de un miembro de agregar un proveedor nuevo.
 - **Platform Admin** = user con `profiles.is_platform_admin = true`, gestiona categorías globales y métricas cross-tenant.
+- **location** = lugar del mapa físico de la comunidad. Tres tipos: `torre`, `piso` (cuelga de una torre) y `zona` (común, siempre raíz).
 
 ## Reglas inviolables
 
@@ -33,6 +34,8 @@ Específicas de A la Mano:
 10. **Rating denormalizado** (`community_providers.rating_average`, `rating_count`) se mantiene **solo via trigger Postgres** (`directory.update_community_provider_rating`). NUNCA actualizar manualmente desde código.
 11. **`phoneNormalized` es la clave de matching**. Toda inserción de provider pasa por `providerService.findOrCreate(...)` que normaliza y busca antes de crear.
 12. **Fotos en WebP**: el upload se procesa server-side con `sharp` (resize 1920x1080 max, calidad 85) antes de Supabase Storage. Ver `provider-photo.service.ts`.
+13. **El mapa de la unidad lo carga el administrador**, y un reporte **NUNCA se bloquea** por mencionar un lugar que no está cargado: se guarda con el texto crudo, `location_id` queda en null, y el lugar aparece en la lista de pendientes por mapear del admin. Un reporte sin ubicación exacta sirve; uno que la app se negó a recibir, no.
+14. **`normalizarLugar` es la clave de matching de lugares** (mismo rol que `phoneNormalized` en providers). Convierte números dictados: "Torre Uno" y "torre 1" caen en la misma torre. Sin fuzzy a propósito — adivinar mal el lugar de un reporte contamina una estadística que después se le presenta al consejo.
 
 ## Estructura
 
@@ -127,3 +130,5 @@ Ver `docs/03-adding-a-feature.md` (heredado).
 - Subir fotos sin pasar por sharp (cualquier formato/peso entraría a Storage).
 - Borrar ratings problemáticos — usar `hideRating` (auditable).
 - Crear categorías directo desde código de members — solo Platform Admin.
+- Insertar en `convivencia.locations` sin pasar por `locationService.crear` (rompe el matching por `normalized` y el enganche de los reportes que venían mencionando ese lugar en texto libre).
+- Borrar un lugar con reportes — usar `cambiarEstado(..., false)` para darlo de baja y no perder el historial.

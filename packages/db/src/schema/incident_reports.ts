@@ -1,15 +1,8 @@
-import { index, pgSchema, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { index, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { convivencia } from './_convivencia';
+import { locations } from './locations';
 import { profiles } from './profiles';
 import { tenants } from './tenants';
-
-/**
- * Schema `convivencia` — lo que pasa dentro de la comunidad.
- *
- * Separado de `directory` porque no tiene nada que ver con proveedores, y
- * de `core` porque no es del template: es la primera pieza propia de A la
- * Mano que no es el directorio.
- */
-export const convivencia = pgSchema('convivencia');
 
 /**
  * Reportes de riesgo y convivencia.
@@ -44,7 +37,20 @@ export const incidentReports = convivencia.table(
 
     /** Slug del tipo. Catálogo en `lib/incident-types.ts`. */
     type: text('type').notNull(),
-    /** Dónde pasó: "Torre 2", "Parqueadero sótano 1", "Gimnasio". */
+
+    /**
+     * Dónde pasó, resuelto contra el mapa de la comunidad. Es lo que hace
+     * agrupable el patrón. `set null` y no `cascade`: si la administración
+     * da de baja una zona, el reporte histórico no se borra — se queda con
+     * el texto de `location` como constancia.
+     */
+    locationId: uuid('location_id').references(() => locations.id, { onDelete: 'set null' }),
+    /**
+     * Lo que la persona escribió, siempre. Cuando `locationId` está cargado
+     * es el nombre del lugar al momento de reportar; cuando no, es un lugar
+     * que todavía no está en el mapa y le queda pendiente al administrador.
+     * Nunca se bloquea un reporte por esto.
+     */
     location: text('location'),
     description: text('description'),
     /** Evidencia. Todavía sin uploader — el campo ya queda listo. */
@@ -64,6 +70,13 @@ export const incidentReports = convivencia.table(
     porComunidadIdx: index('incident_reports_tenant_idx').on(t.tenantId, t.createdAt),
     /* Sostiene la agrupación por patrón: tipo + lugar. */
     patronIdx: index('incident_reports_patron_idx').on(t.tenantId, t.type, t.location),
+    /* Lo mismo pero contra el mapa, que es la agrupación que de verdad
+     * sirve: "8 reportes en Torre 2" y no "5 en 'torre 2' y 3 en 'Torre2'". */
+    patronLugarIdx: index('incident_reports_patron_lugar_idx').on(
+      t.tenantId,
+      t.type,
+      t.locationId,
+    ),
   }),
 );
 
