@@ -1,5 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
+import { communityProviderRepository } from '@/server/repositories/community-provider.repository';
 import { positionRepository } from '@/server/repositories/position.repository';
 import { taskRepository, type FilaTarea } from '@/server/repositories/task.repository';
 import { tenantRepository } from '@/server/repositories/tenant.repository';
@@ -7,9 +8,9 @@ import { auditService } from './audit.service';
 import { locationService } from './location.service';
 import { assertRole } from '@/lib/auth/guards';
 import { buscarLugar } from '@/lib/location-types';
-import { armarMensajeTarea, esEstadoTarea, exigeMotivo } from '@/lib/task-types';
+import { armarMensajeCotizacion, armarMensajeTarea, esEstadoTarea, exigeMotivo } from '@/lib/task-types';
 import { enlaceDeTarea, generarTokenDeTarea, vencimientoDeEnlace } from '@/lib/task-token';
-import { getWhatsappUrlDeNumero } from '@/lib/contact';
+import { getWhatsappUrl, getWhatsappUrlDeNumero } from '@/lib/contact';
 import { env } from '@/env';
 import type { Position, Task, TaskDispatch, TaskUpdate } from '@a-la-mano/db';
 
@@ -20,6 +21,7 @@ const crearTareaSchema = z.object({
   locationId: z.string().uuid().optional().nullable(),
   location: z.string().max(120).optional().nullable(),
   positionId: z.string().uuid().optional().nullable(),
+  communityProviderId: z.string().uuid().optional().nullable(),
 });
 
 export type CrearTareaInput = z.input<typeof crearTareaSchema>;
@@ -76,10 +78,19 @@ export const taskService = {
       }
     }
 
+    /* Destinatarios excluyentes: el puesto gana si por algún camino
+     * llegaran los dos. La UI no lo permite, pero la Server Action recibe
+     * lo que le manden. */
     let positionId: string | null = null;
+    let communityProviderId: string | null = null;
     if (datos.positionId) {
       const puesto = await positionRepository.getById(datos.positionId);
       if (puesto && puesto.tenantId === tenantId) positionId = puesto.id;
+    } else if (datos.communityProviderId) {
+      const fila = await communityProviderRepository.getWithDetails(datos.communityProviderId);
+      if (fila && fila.communityProvider.tenantId === tenantId) {
+        communityProviderId = fila.communityProvider.id;
+      }
     }
 
     const tarea = await taskRepository.create({
@@ -90,6 +101,7 @@ export const taskService = {
       locationId,
       location,
       positionId,
+      communityProviderId,
       status: 'pendiente',
     });
 
@@ -216,7 +228,11 @@ export const taskService = {
       if (!puesto || puesto.tenantId !== tenantId) throw new Error('Puesto no encontrado.');
     }
 
-    const tarea = await taskRepository.update(tareaId, { positionId: puesto?.id ?? null });
+    const tarea = await taskRepository.update(tareaId, {
+      positionId: puesto?.id ?? null,
+      /* Excluyentes: asignar a un puesto saca al proveedor de encima. */
+      communityProviderId: null,
+    });
 
     await taskRepository.addUpdate({
       taskId: tareaId,
@@ -281,8 +297,8 @@ export const taskService = {
     });
 
     /* Despachar implica asignar: si se le manda a portería, es de portería. */
-    if (tarea.positionId !== puesto.id) {
-      await taskRepository.update(tareaId, { positionId: puesto.id });
+    if (tarea.positionId !== puesto.id || tarea.communityProviderId) {
+      await taskRepository.update(tareaId, { positionId: puesto.id, communityProviderId: null });
     }
 
     await taskRepository.addUpdate({
@@ -319,6 +335,114 @@ export const taskService = {
       enlace,
       despacho,
     };
+  },
+
+  /**
+   * Despacha la tarea a un proveedor externo del directorio.
+   *
+   * Misma mecánica que al puesto pero con otro mensaje, y la diferencia no
+   * es cosmética: el portero recibe una orden porque es personal de la
+   * unidad, el proveedor recibe una solicitud de cotización porque hasta
+   * que no cotice y acepte no hay nada acordado.
+   *
+   * Es también donde el producto se cierra sobre sí mismo: el proveedor al
+   * que se le manda salió del directorio que alimentaron los vecinos con
+   * sus calificaciones.
+   */
+  async despacharAProveedor(
+    tenantId: string,
+    tareaId: string,
+    communityProviderId: string,
+  ): Promise<{ urlWhatsapp: string | null; enlace: string; despacho: TaskDispatch }> {
+    const { user } = await assertRole(tenantId, ['owner', 'admin']);
+
+    const tarea = await taskRepository.getById(tareaId);
+    if (!tarea || tarea.tenantId !== tenantId) throw new Error('Pendiente no encontrado.');
+
+    const fila = await communityProviderRepository.getWithDetails(communityProviderId);
+    if (!fila || fila.communityProvider.tenantId !== tenantId) {
+      throw new Error('Ese proveedor no está en el directorio de la comunidad.');
+    }
+
+    const ahora = new Date();
+    const despacho = await taskRepository.createDispatch({
+      taskId: tareaId,
+      tenantId,
+      communityProviderId,
+      recipientLabel: fila.provider.name,
+      phone: fila.provider.phone,
+      token: generarTokenDeTarea(),
+      expiresAt: vencimientoDeEnlace(ahora),
+    });
+
+    /* Despachar implica asignar, y los destinatarios son excluyentes: si
+     * pasa a manos de un proveedor, deja de ser de un puesto. */
+    await taskRepository.update(tareaId, { positionId: null, communityProviderId });
+
+    await taskRepository.addUpdate({
+      taskId: tareaId,
+      tenantId,
+      status: null,
+      note: `Se le pidió cotización a ${fila.provider.name}.`,
+      authorId: user.id,
+    });
+
+    const comunidad = await tenantRepository.findById(tenantId);
+    const enlace = enlaceDeTarea(env.NEXT_PUBLIC_SITE_URL, despacho.token);
+    const mensaje = armarMensajeCotizacion({
+      proveedor: fila.provider.name,
+      titulo: tarea.title,
+      lugar: tarea.location,
+      comunidad: comunidad?.name ?? 'la comunidad',
+      enlace,
+    });
+
+    await auditService.log({
+      tenantId,
+      userId: user.id,
+      action: 'task.quoted',
+      resourceType: 'task',
+      resourceId: tareaId,
+      metadata: { proveedor: fila.provider.name },
+    });
+
+    return {
+      urlWhatsapp: getWhatsappUrl(fila.provider, mensaje),
+      enlace,
+      despacho,
+    };
+  },
+
+  /**
+   * Guarda el pendiente y le pide cotización al proveedor de una sola vez.
+   *
+   * Existe para que el flujo que describió el administrador —dictar, elegir
+   * a quién, y que salga el WhatsApp— sea un toque y no tres pantallas. Si
+   * el despacho falla, el pendiente igual quedó guardado: perder el registro
+   * porque el envío falló sería exactamente el pecado que el módulo evita.
+   */
+  async crearYPedirCotizacion(
+    tenantId: string,
+    input: CrearTareaInput,
+    communityProviderId: string,
+  ): Promise<{
+    tarea: Task;
+    urlWhatsapp: string | null;
+    enlace: string | null;
+    errorDespacho: string | null;
+  }> {
+    const tarea = await this.crear(tenantId, { ...input, communityProviderId });
+    try {
+      const envio = await this.despacharAProveedor(tenantId, tarea.id, communityProviderId);
+      return { tarea, urlWhatsapp: envio.urlWhatsapp, enlace: envio.enlace, errorDespacho: null };
+    } catch (error) {
+      return {
+        tarea,
+        urlWhatsapp: null,
+        enlace: null,
+        errorDespacho: error instanceof Error ? error.message : 'No se pudo despachar.',
+      };
+    }
   },
 
   async revocarDespacho(tenantId: string, despachoId: string): Promise<void> {

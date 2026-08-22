@@ -80,6 +80,43 @@ export const PUESTOS_SUGERIDOS: Array<{ name: string; icon: string }> = [
  * Sale del WhatsApp personal del administrador —`wa.me` no puede hacer otra
  * cosa— así que el texto no finge venir de un sistema.
  */
+/**
+ * El mensaje para un proveedor externo, que es otra cosa que el del puesto.
+ *
+ * El portero recibe una orden: es personal de la unidad y esto es su
+ * trabajo. El plomero recibe una *solicitud*, y hasta que no cotice y
+ * acepte no hay nada acordado. Mandarle a un tercero un mensaje redactado
+ * como una orden de trabajo es una forma rápida de que no vuelva a
+ * contestar.
+ *
+ * El texto sale casi literal de cómo lo describió el administrador:
+ * "cotíceme, tengo esto y qué disponibilidad tiene".
+ */
+export function armarMensajeCotizacion({
+  proveedor,
+  titulo,
+  lugar,
+  comunidad,
+  enlace,
+}: {
+  proveedor: string;
+  titulo: string;
+  lugar?: string | null;
+  comunidad: string;
+  enlace: string;
+}): string {
+  const donde = lugar?.trim() ? ` en ${lugar.trim()}` : '';
+  return [
+    `Hola ${proveedor}, buen día. Le escribo de la administración de ${comunidad}.`,
+    '',
+    `Necesitamos: ${titulo}${donde}.`,
+    '',
+    '¿Me puede cotizar y decir qué disponibilidad tiene?',
+    '',
+    `Acá está el detalle y ahí mismo puede responder: ${enlace}`,
+  ].join('\n');
+}
+
 export function armarMensajeTarea({
   titulo,
   lugar,

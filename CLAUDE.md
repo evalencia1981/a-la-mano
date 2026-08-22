@@ -43,6 +43,9 @@ Específicas de A la Mano:
 16. **Lo único obligatorio de una tarea es `title`.** Sin puesto, sin lugar, sin descripción, se guarda igual. Un pendiente incompleto sirve; uno que la app se negó a recibir vuelve al audio de WhatsApp y de ahí no vuelve.
 17. **`suspendido` exige motivo.** Es la única validación rígida del módulo de pendientes, y responde la pregunta que el administrador repitió tres veces: "si no lo atendieron, ¿por qué?".
 18. **`/tarea/[token]` es la única ruta pública que muta datos.** No lleva `assertTenantMember` a propósito: la autorización es el token, que `taskService` valida en cada llamada (vigencia, revocación, estado). Abre una tarea y nada más.
+19. **Un pendiente se despacha a un puesto O a un proveedor, nunca a los dos.** Al puesto se le manda una orden (es personal de la unidad); al proveedor se le pide una cotización (es externo y hasta que no cotice no hay nada acordado). Lo garantiza un check constraint, no solo el service.
+20. **`interpretarPendiente` no inventa lugares.** El lugar se resuelve contra el mapa por coincidencia exacta y gana **el que se nombró primero** ("Torre 2 ... hacia el parqueadero" es Torre 2). La categoría sí es difusa y solo sugiere: cuando no está seguro se ofrecen todos y decide la persona.
+21. **Los umbrales de calificación viven en `lib/rating.ts`**, no en un service: los usan el servidor (recomendaciones) y el cliente (a quién despachar). Al elegir proveedor, los avalados (≥3 opiniones) van antes que cualquier promedio alto con una sola opinión.
 
 ## Estructura
 

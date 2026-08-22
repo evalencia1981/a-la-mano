@@ -2,18 +2,24 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Copy, MapPin, Send, X } from 'lucide-react';
+import { Copy, MapPin, Send, Star, X } from 'lucide-react';
 import { COLOR_ESTADO, ESTADOS_TAREA, type EstadoTarea } from '@/lib/task-types';
+import { compararPorCalificacion, estaAvalado } from '@/lib/rating';
 import {
   asignarTareaAction,
   cambiarEstadoTareaAction,
   despacharTareaAction,
+  pedirCotizacionAction,
 } from '@/server/actions/task.actions';
 
 interface PuestoVista {
   id: string;
   name: string;
   tieneWhatsapp: boolean;
+  /* Solo los proveedores traen calificación: un puesto es personal de la
+     unidad y no se elige por reputación, se le asigna y punto. */
+  promedio?: number;
+  calificaciones?: number;
 }
 
 interface FilaVista {
@@ -24,16 +30,18 @@ interface FilaVista {
   status: string;
   createdAt: string;
   puesto: { id: string; name: string } | null;
+  proveedor: { id: string; name: string } | null;
 }
 
 interface Props {
   tenantId: string;
   puestos: PuestoVista[];
+  proveedores: PuestoVista[];
   filas: FilaVista[];
   vacioPorFiltro: boolean;
 }
 
-export function Bandeja({ tenantId, puestos, filas, vacioPorFiltro }: Props) {
+export function Bandeja({ tenantId, puestos, proveedores, filas, vacioPorFiltro }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -49,10 +57,12 @@ export function Bandeja({ tenantId, puestos, filas, vacioPorFiltro }: Props) {
     });
   }
 
-  function despachar(tareaId: string, puestoId: string) {
+  function despachar(tareaId: string, destinoId: string, esProveedor: boolean) {
     setError(null);
     startTransition(async () => {
-      const result = await despacharTareaAction(tenantId, tareaId, puestoId);
+      const result = esProveedor
+        ? await pedirCotizacionAction(tenantId, tareaId, destinoId)
+        : await despacharTareaAction(tenantId, tareaId, destinoId);
       if (!result.ok) {
         setError(result.error);
         return;
@@ -91,6 +101,7 @@ export function Bandeja({ tenantId, puestos, filas, vacioPorFiltro }: Props) {
             key={f.id}
             fila={f}
             puestos={puestos}
+            proveedores={proveedores}
             deshabilitado={isPending}
             enlace={enlace?.tareaId === f.id ? enlace.url : null}
             onCerrarEnlace={() => setEnlace(null)}
@@ -98,7 +109,7 @@ export function Bandeja({ tenantId, puestos, filas, vacioPorFiltro }: Props) {
               ejecutar(() => cambiarEstadoTareaAction(tenantId, f.id, estado, nota))
             }
             onAsignar={(puestoId) => ejecutar(() => asignarTareaAction(tenantId, f.id, puestoId))}
-            onDespachar={(puestoId) => despachar(f.id, puestoId)}
+            onDespachar={(destinoId, esProveedor) => despachar(f.id, destinoId, esProveedor)}
           />
         ))}
       </ul>
@@ -109,6 +120,7 @@ export function Bandeja({ tenantId, puestos, filas, vacioPorFiltro }: Props) {
 function TareaItem({
   fila,
   puestos,
+  proveedores,
   deshabilitado,
   enlace,
   onCerrarEnlace,
@@ -118,16 +130,17 @@ function TareaItem({
 }: {
   fila: FilaVista;
   puestos: PuestoVista[];
+  proveedores: PuestoVista[];
   deshabilitado: boolean;
   enlace: string | null;
   onCerrarEnlace: () => void;
   onCambiarEstado: (estado: string, nota?: string | null) => void;
   onAsignar: (puestoId: string | null) => void;
-  onDespachar: (puestoId: string) => void;
+  onDespachar: (destinoId: string, esProveedor: boolean) => void;
 }) {
   const [suspendiendo, setSuspendiendo] = useState(false);
   const [motivo, setMotivo] = useState('');
-  const [eligiendoPuesto, setEligiendoPuesto] = useState(false);
+  const [eligiendoDestino, setEligiendoDestino] = useState(false);
 
   const estado = (fila.status in ESTADOS_TAREA ? fila.status : 'pendiente') as EstadoTarea;
   const resuelto = estado === 'resuelto';
@@ -156,7 +169,8 @@ function TareaItem({
               </span>
             )}
             <span>
-              {fila.puesto ? fila.puesto.name : 'Sin asignar'}
+              {fila.puesto?.name ??
+                (fila.proveedor ? `${fila.proveedor.name} (proveedor)` : 'Sin asignar')}
             </span>
             <span>
               {fecha.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}
@@ -226,24 +240,37 @@ function TareaItem({
         </div>
       )}
 
-      {eligiendoPuesto && (
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {puestos.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              data-tactil
-              disabled={deshabilitado}
-              onClick={() => {
-                onDespachar(p.id);
-                setEligiendoPuesto(false);
+      {/* Separados porque no son la misma decisión: al puesto se le manda
+          una orden de trabajo, al proveedor se le pide una cotización. */}
+      {eligiendoDestino && (
+        <div className="mt-2 space-y-2">
+          {puestos.length > 0 && (
+            <GrupoDestinos
+              titulo="Personal de la unidad"
+              destinos={puestos}
+              deshabilitado={deshabilitado}
+              onElegir={(id) => {
+                onDespachar(id, false);
+                setEligiendoDestino(false);
               }}
-              className="rounded-full border border-[var(--color-border)] px-2.5 py-1 text-sm hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
-            >
-              {p.name}
-              {!p.tieneWhatsapp && ' (sin WhatsApp)'}
-            </button>
-          ))}
+            />
+          )}
+          {proveedores.length > 0 && (
+            <GrupoDestinos
+              titulo="Pedir cotización a un proveedor"
+              destinos={[...proveedores].sort((a, b) =>
+                compararPorCalificacion(
+                  { promedio: a.promedio ?? 0, calificaciones: a.calificaciones ?? 0 },
+                  { promedio: b.promedio ?? 0, calificaciones: b.calificaciones ?? 0 },
+                ),
+              )}
+              deshabilitado={deshabilitado}
+              onElegir={(id) => {
+                onDespachar(id, true);
+                setEligiendoDestino(false);
+              }}
+            />
+          )}
         </div>
       )}
 
@@ -269,16 +296,17 @@ function TareaItem({
             label="Resuelto"
           />
 
-          {puestos.length > 0 && (
+          {(puestos.length > 0 || proveedores.length > 0) && (
             <button
               type="button"
               data-tactil
               disabled={deshabilitado}
               onClick={() => {
-                /* Si ya tiene puesto, se despacha directo; si no, primero hay
-                   que elegir a quién. */
-                if (fila.puesto) onDespachar(fila.puesto.id);
-                else setEligiendoPuesto((v) => !v);
+                /* Si ya tiene destinatario, se despacha directo; si no,
+                   primero hay que elegir a quién. */
+                if (fila.puesto) onDespachar(fila.puesto.id, false);
+                else if (fila.proveedor) onDespachar(fila.proveedor.id, true);
+                else setEligiendoDestino((v) => !v);
               }}
               className="flex items-center gap-1 rounded-lg border border-[var(--color-border)] px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
             >
@@ -287,7 +315,7 @@ function TareaItem({
             </button>
           )}
 
-          {fila.puesto && (
+          {(fila.puesto || fila.proveedor) && (
             <Accion
               deshabilitado={deshabilitado}
               onClick={() => onAsignar(null)}
@@ -319,5 +347,49 @@ function Accion({
     >
       {label}
     </button>
+  );
+}
+
+function GrupoDestinos({
+  titulo,
+  destinos,
+  deshabilitado,
+  onElegir,
+}: {
+  titulo: string;
+  destinos: PuestoVista[];
+  deshabilitado: boolean;
+  onElegir: (id: string) => void;
+}) {
+  return (
+    <div>
+      <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">
+        {titulo}
+      </span>
+      <div className="mt-1 flex flex-wrap gap-1.5">
+        {destinos.map((d) => (
+          <button
+            key={d.id}
+            type="button"
+            data-tactil
+            disabled={deshabilitado}
+            onClick={() => onElegir(d.id)}
+            className="rounded-full border border-[var(--color-border)] px-2.5 py-1 text-sm transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+          >
+            {d.name}
+            {d.calificaciones !== undefined && d.calificaciones > 0 && (
+              <span
+                className={`ml-1 text-xs ${estaAvalado(d.calificaciones) ? 'font-medium' : ''}`}
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                <Star className="mb-0.5 inline h-3 w-3" aria-hidden />{' '}
+                {(d.promedio ?? 0).toFixed(1).replace('.', ',')} ({d.calificaciones})
+              </span>
+            )}
+            {!d.tieneWhatsapp && ' (sin WhatsApp)'}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }

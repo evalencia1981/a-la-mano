@@ -6,6 +6,7 @@ import { Check, Send } from 'lucide-react';
 import { iconoDe } from '@/lib/category-icons';
 import { TIPOS_INCIDENTE, type TipoIncidente } from '@/lib/incident-types';
 import { crearReporteAction } from '@/server/actions/incident.actions';
+import { BotonMicrofono } from '@/components/shared/boton-microfono';
 import { SelectorLugar, type OpcionLugar, type TorreConPisos } from './selector-lugar';
 
 /**
@@ -32,6 +33,8 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [enviado, setEnviado] = useState(false);
+  /* Controlado porque el dictado tiene que poder escribir adentro. */
+  const [descripcion, setDescripcion] = useState('');
 
   function enviar(formData: FormData) {
     if (!tipo) {
@@ -71,6 +74,7 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
           onClick={() => {
             setEnviado(false);
             setTipo(null);
+            setDescripcion('');
           }}
           className="mt-5 rounded-lg border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)]"
         >
@@ -119,14 +123,25 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
               Contá qué viste{' '}
               <span className="font-normal text-[var(--color-text-secondary)]">(opcional)</span>
             </label>
-            <textarea
-              id="description"
-              name="description"
-              rows={3}
-              maxLength={1000}
-              placeholder="Qué pasó y a qué hora."
-              className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2.5 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
-            />
+            <div className="flex items-start gap-2">
+              <textarea
+                id="description"
+                name="description"
+                rows={3}
+                maxLength={1000}
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                placeholder="Qué pasó y a qué hora."
+                className="w-full flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2.5 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
+              />
+              <BotonMicrofono
+                valor={descripcion}
+                onCambio={setDescripcion}
+                etiqueta="Dictar lo que viste"
+                onError={setError}
+                deshabilitado={isPending}
+              />
+            </div>
           </div>
         </>
       )}

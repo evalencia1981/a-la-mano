@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
 import { MapPin, Plus } from 'lucide-react';
+import { BotonMicrofono } from '@/components/shared/boton-microfono';
 import { normalizarLugar } from '@/lib/location-types';
 import { crearLugarAction } from '@/server/actions/location.actions';
 
@@ -174,15 +175,24 @@ export function SelectorLugar({ tenantId, esAdmin, torres, zonas }: Props) {
 
       {(!hayMapa || modoLibre) && (
         <>
-          <input
-            name="lugar-libre"
-            value={texto}
-            maxLength={120}
-            onChange={(e) => setTexto(e.target.value)}
-            placeholder="Torre 3, parqueadero sótano 1, gimnasio…"
-            aria-label="Dónde pasó"
-            className="h-12 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
-          />
+          <div className="flex gap-2">
+            <input
+              name="lugar-libre"
+              value={texto}
+              maxLength={120}
+              onChange={(e) => setTexto(e.target.value)}
+              placeholder="Torre 3, parqueadero sótano 1, gimnasio…"
+              aria-label="Dónde pasó"
+              className="h-12 flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
+            />
+            <BotonMicrofono
+              valor={texto}
+              onCambio={setTexto}
+              etiqueta="Dictar el lugar"
+              onError={setError}
+              deshabilitado={isPending}
+            />
+          </div>
 
           {desconocido && esAdmin && (
             <button

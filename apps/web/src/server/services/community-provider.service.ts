@@ -8,16 +8,9 @@ import { tenantRepository } from '@/server/repositories/tenant.repository';
 import { providerService, providerInputSchema } from './provider.service';
 import { auditService } from './audit.service';
 import { assertRole, assertTenantMember } from '@/lib/auth/guards';
+import { MINIMO_CALIFICACIONES, PROMEDIO_MINIMO } from '@/lib/rating';
 
-/**
- * Umbral para que un proveedor se recomiende a otra comunidad.
- *
- * El mínimo de calificaciones importa tanto como el promedio: filtra al que
- * tuvo una sola opinión afortunada. Subirlo hace las recomendaciones más
- * confiables pero más escasas — con 5, casi nadie califica lo suficiente.
- */
-const MINIMO_CALIFICACIONES = 3;
-const PROMEDIO_MINIMO = 4.0;
+
 
 const addProviderSchema = providerInputSchema.extend({
   localNotes: z.string().max(2000).optional().nullable(),

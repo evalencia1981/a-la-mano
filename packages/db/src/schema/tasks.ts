@@ -1,4 +1,5 @@
 import { index, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { communityProviders } from './community_providers';
 import { convivencia } from './_convivencia';
 import { locations } from './locations';
 import { positions } from './positions';
@@ -51,6 +52,15 @@ export const tasks = convivencia.table(
 
     /** Al puesto, nunca a la persona. Nullable a propósito. */
     positionId: uuid('position_id').references(() => positions.id, { onDelete: 'set null' }),
+    /**
+     * O a un proveedor del directorio de la comunidad. Excluyente con
+     * `positionId`: el puesto es personal de la unidad y recibe una orden,
+     * el proveedor es externo y recibe una solicitud de cotización. Un check
+     * constraint impide que estén los dos.
+     */
+    communityProviderId: uuid('community_provider_id').references(() => communityProviders.id, {
+      onDelete: 'set null',
+    }),
 
     /** 'pendiente' | 'en_proceso' | 'suspendido' | 'resuelto'. */
     status: text('status').notNull().default('pendiente'),
@@ -68,6 +78,11 @@ export const tasks = convivencia.table(
     porPuestoIdx: index('tasks_puesto_idx').on(t.tenantId, t.positionId, t.status),
     /* "Qué reporté hoy" — la consulta que él pidió explícitamente. */
     porFechaIdx: index('tasks_fecha_idx').on(t.tenantId, t.createdAt),
+    porProveedorIdx: index('tasks_proveedor_idx').on(
+      t.tenantId,
+      t.communityProviderId,
+      t.status,
+    ),
   }),
 );
 
@@ -142,6 +157,9 @@ export const taskDispatches = convivencia.table(
       .references(() => tenants.id, { onDelete: 'cascade' }),
 
     positionId: uuid('position_id').references(() => positions.id, { onDelete: 'set null' }),
+    communityProviderId: uuid('community_provider_id').references(() => communityProviders.id, {
+      onDelete: 'set null',
+    }),
     /** Cómo se identifica quien recibe, para la bitácora. */
     recipientLabel: text('recipient_label').notNull(),
     /** A qué número se despachó. Queda como constancia del envío. */

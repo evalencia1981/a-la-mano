@@ -1,8 +1,10 @@
 import 'server-only';
 import { and, asc, desc, eq, gte, isNull, lt, sql } from 'drizzle-orm';
 import {
+  communityProviders,
   db,
   positions,
+  providers,
   taskDispatches,
   taskUpdates,
   tasks,
@@ -16,10 +18,12 @@ import {
   type TaskUpdate,
 } from '@a-la-mano/db';
 
-/** Una tarea con el puesto al que está asignada, si tiene. */
+/** Una tarea con su destinatario, sea puesto interno o proveedor externo. */
 export interface FilaTarea {
   tarea: Task;
   puesto: Position | null;
+  /** Solo el nombre: la bandeja no necesita la ficha entera del proveedor. */
+  proveedor: { id: string; name: string } | null;
 }
 
 /** Todo lo que necesita la página pública del enlace, en una sola consulta. */
@@ -61,9 +65,11 @@ export const taskRepository = {
    */
   async listBandeja(tenantId: string, limit = 200): Promise<FilaTarea[]> {
     const rows = await db
-      .select({ tarea: tasks, puesto: positions })
+      .select({ tarea: tasks, puesto: positions, proveedor: providers })
       .from(tasks)
       .leftJoin(positions, eq(positions.id, tasks.positionId))
+      .leftJoin(communityProviders, eq(communityProviders.id, tasks.communityProviderId))
+      .leftJoin(providers, eq(providers.id, communityProviders.providerId))
       .where(eq(tasks.tenantId, tenantId))
       .orderBy(
         asc(sql`case when ${tasks.status} = 'resuelto' then 1 else 0 end`),
@@ -71,21 +77,31 @@ export const taskRepository = {
       )
       .limit(limit);
 
-    return rows.map((r) => ({ tarea: r.tarea, puesto: r.puesto }));
+    return rows.map((r) => ({
+      tarea: r.tarea,
+      puesto: r.puesto,
+      proveedor: r.proveedor ? { id: r.proveedor.id, name: r.proveedor.name } : null,
+    }));
   },
 
   /** "Qué reporté hoy" — la consulta que pidió explícitamente. */
   async listPorRango(tenantId: string, desde: Date, hasta: Date): Promise<FilaTarea[]> {
     const rows = await db
-      .select({ tarea: tasks, puesto: positions })
+      .select({ tarea: tasks, puesto: positions, proveedor: providers })
       .from(tasks)
       .leftJoin(positions, eq(positions.id, tasks.positionId))
+      .leftJoin(communityProviders, eq(communityProviders.id, tasks.communityProviderId))
+      .leftJoin(providers, eq(providers.id, communityProviders.providerId))
       .where(
         and(eq(tasks.tenantId, tenantId), gte(tasks.createdAt, desde), lt(tasks.createdAt, hasta)),
       )
       .orderBy(desc(tasks.createdAt));
 
-    return rows.map((r) => ({ tarea: r.tarea, puesto: r.puesto }));
+    return rows.map((r) => ({
+      tarea: r.tarea,
+      puesto: r.puesto,
+      proveedor: r.proveedor ? { id: r.proveedor.id, name: r.proveedor.name } : null,
+    }));
   },
 
   async countAbiertas(tenantId: string): Promise<number> {

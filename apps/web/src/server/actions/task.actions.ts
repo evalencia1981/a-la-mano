@@ -110,3 +110,56 @@ export async function actualizarTareaPorEnlaceAction(
     return fail(error);
   }
 }
+
+/**
+ * Le pide cotización a un proveedor del directorio y devuelve el WhatsApp
+ * listo para abrir. Misma mecánica que el despacho a un puesto, con otro
+ * texto: al proveedor no se le da una orden, se le pide precio.
+ */
+export async function pedirCotizacionAction(
+  tenantId: string,
+  tareaId: string,
+  communityProviderId: string,
+): Promise<ActionResult<{ urlWhatsapp: string | null; enlace: string; despacho: TaskDispatch }>> {
+  try {
+    const resultado = await taskService.despacharAProveedor(
+      tenantId,
+      tareaId,
+      communityProviderId,
+    );
+    await revalidar(tenantId);
+    return ok(resultado);
+  } catch (error) {
+    return fail(error);
+  }
+}
+
+/**
+ * Guarda el pendiente y le pide cotización al proveedor en un solo paso.
+ * Devuelve el WhatsApp listo para abrir; si el despacho falló, el pendiente
+ * igual quedó guardado y `errorDespacho` dice por qué.
+ */
+export async function crearYPedirCotizacionAction(
+  tenantId: string,
+  input: CrearTareaInput,
+  communityProviderId: string,
+): Promise<
+  ActionResult<{
+    tarea: Task;
+    urlWhatsapp: string | null;
+    enlace: string | null;
+    errorDespacho: string | null;
+  }>
+> {
+  try {
+    const resultado = await taskService.crearYPedirCotizacion(
+      tenantId,
+      input,
+      communityProviderId,
+    );
+    await revalidar(tenantId);
+    return ok(resultado);
+  } catch (error) {
+    return fail(error);
+  }
+}
