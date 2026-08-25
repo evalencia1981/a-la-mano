@@ -8,6 +8,7 @@ import { providerPhotoService } from '@/server/services/provider-photo.service';
 import { PhotoManager } from './photo-manager';
 import { LocalNotes } from '@/components/provider/local-notes';
 import { ProviderActions } from './provider-actions';
+import { FichaForm } from './ficha-form';
 
 export const metadata = { title: 'Editar proveedor' };
 
@@ -44,6 +45,29 @@ export default async function AdminProviderEditPage({ params }: Props) {
           {provider.phone}
         </p>
       </header>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Ficha del proveedor</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FichaForm
+            tenantId={current.tenant.id}
+            providerId={provider.id}
+            comunidades={provider.communityCount}
+            inicial={{
+              name: provider.name,
+              phone: provider.phone,
+              whatsappNumber: provider.whatsappNumber,
+              isWhatsapp: provider.isWhatsapp,
+              city: provider.city,
+              neighborhood: provider.neighborhood,
+              instagramHandle: provider.instagramHandle,
+              description: provider.description,
+            }}
+          />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
