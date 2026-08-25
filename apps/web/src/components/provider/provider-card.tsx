@@ -37,12 +37,20 @@ export function ProviderCard({
   primaryPhoto,
   category,
   contacto,
+  href,
 }: {
   tenantSlug: string;
   communityProvider: CommunityProvider;
   provider: Provider;
   primaryPhoto: ProviderPhoto | null;
   category?: Category | null;
+  /**
+   * A dónde lleva la ficha. Por defecto al detalle del directorio, que es
+   * lo que necesita el vecino; la administración le pasa su propia ruta de
+   * edición. Sin esto, la lista de admin mandaba a la vista pública y la
+   * pantalla de edición quedaba inalcanzable navegando.
+   */
+  href?: string;
   /**
    * Con quién y desde dónde escribe el vecino. Va como datos y no como
    * función armada: esta ficha se renderiza dentro del buscador, que es
@@ -89,7 +97,7 @@ export function ProviderCard({
 
             <h3 className="truncate font-display text-lg font-semibold leading-tight">
               <Link
-                href={`/${tenantSlug}/directory/provider/${communityProvider.id}`}
+                href={href ?? `/${tenantSlug}/directory/provider/${communityProvider.id}`}
                 className="outline-none after:absolute after:inset-0 focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-2"
               >
                 {provider.name}

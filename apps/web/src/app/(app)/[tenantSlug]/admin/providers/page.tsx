@@ -54,6 +54,9 @@ export default async function AdminProvidersPage({ params }: Props) {
             <div key={row.communityProvider.id} className="relative">
               <ProviderCard
                 tenantSlug={tenantSlug}
+                /* Desde administración, la ficha lleva a editar, no a la
+                   vista del vecino. */
+                href={`/${tenantSlug}/admin/providers/${row.communityProvider.id}`}
                 communityProvider={row.communityProvider}
                 provider={row.provider}
                 primaryPhoto={row.primaryPhoto}
