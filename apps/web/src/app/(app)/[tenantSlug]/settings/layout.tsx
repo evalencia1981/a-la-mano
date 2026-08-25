@@ -8,9 +8,9 @@ interface Props {
 export default async function SettingsLayout({ children, params }: Props) {
   const { tenantSlug } = await params;
   return (
-    <div className="flex gap-8">
+    <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
       <SettingsNav tenantSlug={tenantSlug} />
-      <div className="flex-1 max-w-3xl">{children}</div>
+      <div className="min-w-0 flex-1 lg:max-w-3xl">{children}</div>
     </div>
   );
 }

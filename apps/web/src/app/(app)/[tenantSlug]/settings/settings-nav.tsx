@@ -16,7 +16,7 @@ export function SettingsNav({ tenantSlug }: { tenantSlug: string }) {
   const base = `/${tenantSlug}/settings`;
 
   return (
-    <nav className="w-48 space-y-1">
+    <nav className="-mx-4 flex gap-1 overflow-x-auto px-4 pb-1 lg:mx-0 lg:w-48 lg:flex-col lg:space-y-1 lg:overflow-visible lg:px-0 lg:pb-0">
       {links.map((l) => {
         const href = l.slug ? `${base}/${l.slug}` : base;
         const active = pathname === href;
@@ -25,7 +25,7 @@ export function SettingsNav({ tenantSlug }: { tenantSlug: string }) {
             key={l.label}
             href={href}
             className={cn(
-              'block rounded-md px-3 py-2 text-sm hover:bg-[var(--color-bg-secondary)]',
+              'shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-sm hover:bg-[var(--color-bg-secondary)] lg:block',
               active && 'bg-[var(--color-bg-secondary)] font-medium',
             )}
           >

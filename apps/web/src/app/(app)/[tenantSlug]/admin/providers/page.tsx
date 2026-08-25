@@ -27,7 +27,7 @@ export default async function AdminProvidersPage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-end justify-between">
+      <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Proveedores</h1>
           <p className="text-sm text-[var(--color-text-secondary)]">

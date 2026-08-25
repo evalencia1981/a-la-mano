@@ -297,62 +297,64 @@ export function CategoryEditor({
       )}
 
       <div className="overflow-hidden rounded-xl border border-[var(--color-border)]">
-        <table className="w-full text-sm">
-          <thead className="bg-[var(--color-bg-secondary)] text-left text-[var(--color-text-secondary)]">
-            <tr>
-              <th className="px-4 py-2.5 font-medium">Categoría</th>
-              <th className="hidden px-4 py-2.5 font-medium sm:table-cell">Grupo</th>
-              <th className="px-4 py-2.5 text-right font-medium">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--color-border)]">
-            {categorias.map((c) => (
-              <tr key={c.id} className={c.isActive ? '' : 'opacity-50'}>
-                <td className="px-4 py-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <ProviderAvatar
-                      photo={null}
-                      category={c}
-                      nombre={c.name}
-                      className="h-9 w-9 shrink-0 rounded-lg"
-                      tamañoIcono={18}
-                    />
-                    <div className="min-w-0">
-                      <div className="truncate font-medium">{c.name}</div>
-                      <div className="truncate text-xs text-[var(--color-text-secondary)]">
-                        {c.slug}
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-[var(--color-bg-secondary)] text-left text-[var(--color-text-secondary)]">
+              <tr>
+                <th className="px-4 py-2.5 font-medium">Categoría</th>
+                <th className="hidden px-4 py-2.5 font-medium sm:table-cell">Grupo</th>
+                <th className="px-4 py-2.5 text-right font-medium">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border)]">
+              {categorias.map((c) => (
+                <tr key={c.id} className={c.isActive ? '' : 'opacity-50'}>
+                  <td className="px-4 py-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <ProviderAvatar
+                        photo={null}
+                        category={c}
+                        nombre={c.name}
+                        className="h-9 w-9 shrink-0 rounded-lg"
+                        tamañoIcono={18}
+                      />
+                      <div className="min-w-0">
+                        <div className="truncate font-medium">{c.name}</div>
+                        <div className="truncate text-xs text-[var(--color-text-secondary)]">
+                          {c.slug}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className="hidden px-4 py-2.5 text-[var(--color-text-secondary)] sm:table-cell">
-                  {c.groupName}
-                </td>
-                <td className="px-4 py-2.5">
-                  <div className="flex items-center justify-end gap-1">
-                    <button
-                      type="button"
-                      onClick={() => abrirEdicion(c)}
-                      disabled={isPending}
-                      className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                      Editar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => alternar(c)}
-                      disabled={isPending}
-                      className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
-                    >
-                      {c.isActive ? 'Desactivar' : 'Activar'}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                  <td className="hidden px-4 py-2.5 text-[var(--color-text-secondary)] sm:table-cell">
+                    {c.groupName}
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <div className="flex items-center justify-end gap-1">
+                      <button
+                        type="button"
+                        onClick={() => abrirEdicion(c)}
+                        disabled={isPending}
+                        className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => alternar(c)}
+                        disabled={isPending}
+                        className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+                      >
+                        {c.isActive ? 'Desactivar' : 'Activar'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

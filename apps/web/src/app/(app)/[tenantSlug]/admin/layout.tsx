@@ -29,23 +29,27 @@ export default async function AdminLayout({ params, children }: Props) {
     { href: `${base}/billing`, label: 'Facturación' },
   ];
 
+  /* En el teléfono la navegación es una fila de pestañas que se desliza; en
+   * escritorio vuelve a ser la barra lateral. Antes era una columna fija de
+   * 192px siempre: con la separación se comía 224px de un ancho de 360, y
+   * dejaba el contenido en 136px. */
   return (
-    <div className="flex gap-8">
-      <nav className="w-48 space-y-1">
-        <h2 className="text-xs font-semibold uppercase text-[var(--color-text-secondary)] tracking-wide px-3 mb-2">
+    <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
+      <nav className="-mx-4 flex gap-1 overflow-x-auto px-4 pb-1 lg:mx-0 lg:w-48 lg:flex-col lg:space-y-1 lg:overflow-visible lg:px-0 lg:pb-0">
+        <h2 className="mb-2 hidden px-3 text-xs font-semibold uppercase tracking-wide text-[var(--color-text-secondary)] lg:block">
           Admin
         </h2>
         {links.map((l) => (
           <Link
             key={l.href}
             href={l.href}
-            className="block rounded-md px-3 py-2 text-sm hover:bg-[var(--color-bg-secondary)]"
+            className="shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-sm hover:bg-[var(--color-bg-secondary)] lg:block"
           >
             {l.label}
           </Link>
         ))}
       </nav>
-      <div className="flex-1 max-w-4xl">{children}</div>
+      <div className="min-w-0 flex-1 lg:max-w-4xl">{children}</div>
     </div>
   );
 }

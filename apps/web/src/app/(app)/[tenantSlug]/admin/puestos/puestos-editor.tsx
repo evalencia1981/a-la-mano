@@ -167,7 +167,7 @@ function PuestoItem({
           }`}
         />
 
-        <label className="flex items-center gap-1.5">
+        <label className="flex min-w-0 flex-1 items-center gap-1.5 sm:flex-none">
           <span className="sr-only">WhatsApp de {puesto.name}</span>
           {puesto.phone ? (
             <Phone className="h-4 w-4 shrink-0 text-[var(--color-text-secondary)]" aria-hidden />
@@ -181,7 +181,7 @@ function PuestoItem({
             disabled={deshabilitado}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="WhatsApp (573001234567)"
-            className="h-10 w-52 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-2 text-sm outline-none transition-colors focus:border-[var(--color-text-primary)]"
+            className="h-10 w-full min-w-0 sm:w-52 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-2 text-sm outline-none transition-colors focus:border-[var(--color-text-primary)]"
           />
         </label>
 

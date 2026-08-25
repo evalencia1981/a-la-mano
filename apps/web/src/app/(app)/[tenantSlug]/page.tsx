@@ -121,7 +121,7 @@ export default async function CommunityDashboardPage({ params }: Props) {
       )}
 
       <section className="space-y-3">
-        <div className="flex items-end justify-between gap-3">
+        <div className="flex flex-wrap items-end justify-between gap-3 gap-3">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold">
             <Star
               className="h-4 w-4 fill-[var(--color-estrella)] text-[var(--color-estrella)]"

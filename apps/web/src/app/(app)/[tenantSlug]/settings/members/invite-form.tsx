@@ -59,7 +59,7 @@ export function InviteMemberForm({ tenantId }: { tenantId: string }) {
           {status.token && (
             <p className="mt-1 text-xs text-[var(--color-text-secondary)] break-all">
               Token (compartir manualmente hasta que esté el envío por email):{' '}
-              <code>{status.token}</code>
+              <code className="break-all">{status.token}</code>
             </p>
           )}
         </div>

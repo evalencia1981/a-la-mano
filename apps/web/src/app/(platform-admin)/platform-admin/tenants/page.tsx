@@ -16,30 +16,32 @@ export default async function PlatformTenantsPage() {
 
       <Card>
         <CardContent className="p-0">
-          <table className="w-full text-sm">
-            <thead className="bg-[var(--color-bg-secondary)] text-left text-[var(--color-text-secondary)]">
-              <tr>
-                <th className="px-4 py-2 font-medium">Nombre</th>
-                <th className="px-4 py-2 font-medium">Slug</th>
-                <th className="px-4 py-2 font-medium">Tipo</th>
-                <th className="px-4 py-2 font-medium">Status</th>
-                <th className="px-4 py-2 font-medium">Creado</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--color-border)]">
-              {rows.map((t) => (
-                <tr key={t.id}>
-                  <td className="px-4 py-2 font-medium">{t.name}</td>
-                  <td className="px-4 py-2 text-[var(--color-text-secondary)]">{t.slug}</td>
-                  <td className="px-4 py-2">{t.type}</td>
-                  <td className="px-4 py-2">{t.status}</td>
-                  <td className="px-4 py-2 text-xs text-[var(--color-text-secondary)]">
-                    {new Date(t.createdAt).toLocaleDateString('es-CO')}
-                  </td>
+          <div className="w-full overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-[var(--color-bg-secondary)] text-left text-[var(--color-text-secondary)]">
+                <tr>
+                  <th className="px-4 py-2 font-medium">Nombre</th>
+                  <th className="px-4 py-2 font-medium">Slug</th>
+                  <th className="px-4 py-2 font-medium">Tipo</th>
+                  <th className="px-4 py-2 font-medium">Status</th>
+                  <th className="px-4 py-2 font-medium">Creado</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[var(--color-border)]">
+                {rows.map((t) => (
+                  <tr key={t.id}>
+                    <td className="px-4 py-2 font-medium">{t.name}</td>
+                    <td className="px-4 py-2 text-[var(--color-text-secondary)]">{t.slug}</td>
+                    <td className="px-4 py-2">{t.type}</td>
+                    <td className="px-4 py-2">{t.status}</td>
+                    <td className="px-4 py-2 text-xs text-[var(--color-text-secondary)]">
+                      {new Date(t.createdAt).toLocaleDateString('es-CO')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </CardContent>
       </Card>
     </div>
