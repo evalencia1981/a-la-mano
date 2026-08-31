@@ -36,7 +36,7 @@ export default async function PlatformAdminLayout({ children }: Props) {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-bg-secondary)]">
+    <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-text-primary)] text-[var(--color-bg-primary)]">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex min-w-0 items-center gap-2">
@@ -51,7 +51,7 @@ export default async function PlatformAdminLayout({ children }: Props) {
               <Link
                 href={`/${volverA}`}
                 data-tactil
-                className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium opacity-80 transition-opacity hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                className="flex h-9 items-center gap-1.5 rounded-[var(--radio-control)] px-2.5 text-sm font-medium opacity-80 transition-opacity hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="hidden sm:inline">Volver a mi comunidad</span>
@@ -62,7 +62,7 @@ export default async function PlatformAdminLayout({ children }: Props) {
                 type="submit"
                 data-tactil
                 title="Cerrar sesión"
-                className="flex h-9 w-9 items-center justify-center rounded-lg opacity-80 transition-opacity hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                className="flex h-9 w-9 items-center justify-center rounded-[var(--radio-control)] opacity-80 transition-opacity hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
               >
                 <LogOut className="h-4 w-4" />
                 <span className="sr-only">Cerrar sesión</span>
@@ -77,7 +77,7 @@ export default async function PlatformAdminLayout({ children }: Props) {
               <Link
                 key={href}
                 href={href}
-                className="flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                className="flex shrink-0 items-center gap-2 rounded-[var(--radio-control)] px-3 py-1.5 text-sm font-medium opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
               >
                 <Icono className="h-4 w-4" />
                 {label}

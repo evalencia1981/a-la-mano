@@ -43,7 +43,7 @@ export default async function AdminLayout({ params, children }: Props) {
           <Link
             key={l.href}
             href={l.href}
-            className="shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-sm hover:bg-[var(--color-bg-secondary)] lg:block"
+            className="shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 text-sm hover:bg-[var(--color-bg-secondary)] lg:block"
           >
             {l.label}
           </Link>

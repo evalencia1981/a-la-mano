@@ -1,5 +1,5 @@
 import { iconoDe } from '@/lib/category-icons';
-import { colorDeGrupo } from '@/lib/category-groups';
+import { colorDeGrupo, tintaDeGrupo } from '@/lib/category-groups';
 import type { Category, ProviderPhoto } from '@a-la-mano/db';
 
 /**
@@ -41,9 +41,12 @@ export function ProviderAvatar({
     <div
       aria-hidden
       className={`flex items-center justify-center ${className}`}
-      style={{ backgroundColor: colorDeGrupo(category?.groupName) }}
+      style={{
+        backgroundColor: colorDeGrupo(category?.groupName),
+        color: tintaDeGrupo(category?.groupName),
+      }}
     >
-      <Icono width={tamañoIcono} height={tamañoIcono} className="text-white" strokeWidth={1.5} />
+      <Icono width={tamañoIcono} height={tamañoIcono} strokeWidth={1.5} />
     </div>
   );
 }

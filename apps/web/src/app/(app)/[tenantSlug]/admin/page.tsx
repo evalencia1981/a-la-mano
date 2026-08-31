@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronRight, MapPin, Sparkles } from 'lucide-react';
+import { estiloTinteColor } from '@/lib/category-groups';
 import { getCurrentTenant } from '@/lib/auth/current-tenant';
 import { communityProviderService } from '@/server/services/community-provider.service';
 import { incidentService } from '@/server/services/incident.service';
@@ -36,11 +37,14 @@ export default async function AdminDashboardPage({ params }: Props) {
     taskService.countAbiertas(current.tenant.id),
   ]);
 
+  /* `reclama`: la métrica pide una acción cuando no está en cero. Las
+   * otras son inventario — saber que hay 40 proveedores no obliga a nada. */
   const metricas = [
     {
       label: 'Pendientes abiertos',
       valor: pendientesAbiertos,
       href: `/${tenantSlug}/admin/pendientes`,
+      reclama: true,
     },
     {
       label: 'Proveedores activos',
@@ -51,11 +55,13 @@ export default async function AdminDashboardPage({ params }: Props) {
       label: 'Reportes sin resolver',
       valor: reportesPendientes,
       href: `/${tenantSlug}/admin/reportes`,
+      reclama: true,
     },
     {
       label: 'Sugerencias pendientes',
       valor: sugerencias.length,
       href: `/${tenantSlug}/admin/suggestions`,
+      reclama: true,
     },
     { label: 'Miembros', valor: miembros.length, href: `/${tenantSlug}/settings/members` },
   ];
@@ -72,7 +78,11 @@ export default async function AdminDashboardPage({ params }: Props) {
           <Link
             key={m.label}
             href={m.href}
-            className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4 transition-colors hover:border-[var(--color-text-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+            data-interactiva
+            style={estiloTinteColor(
+              m.reclama && m.valor > 0 ? 'var(--color-urgencia)' : 'var(--color-accent-primary)',
+            )}
+            className="ficha foco p-4"
           >
             <div className="text-sm text-[var(--color-text-secondary)]">{m.label}</div>
             <div className="tabular mt-1 font-display text-3xl font-bold">{m.valor}</div>
@@ -86,7 +96,7 @@ export default async function AdminDashboardPage({ params }: Props) {
         <Link
           href={`/${tenantSlug}/admin/lugares`}
           data-tactil
-          className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-3.5 transition-colors hover:border-[var(--color-text-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          className="flex items-center gap-3 superficie px-4 py-3.5 transition-colors hover:border-[var(--color-text-secondary)] foco"
         >
           <MapPin className="h-5 w-5 shrink-0 text-[var(--color-urgencia)]" aria-hidden />
           <span className="flex-1 text-sm">
@@ -109,7 +119,7 @@ export default async function AdminDashboardPage({ params }: Props) {
         <Link
           href={`/${tenantSlug}/admin/recomendados`}
           data-tactil
-          className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-3.5 transition-colors hover:border-[var(--color-text-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          className="flex items-center gap-3 superficie px-4 py-3.5 transition-colors hover:border-[var(--color-text-secondary)] foco"
         >
           <Sparkles className="h-5 w-5 shrink-0 text-[var(--color-accent-primary)]" aria-hidden />
           <span className="flex-1 text-sm">

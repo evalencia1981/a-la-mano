@@ -36,8 +36,13 @@ export async function NavShell({ user, current, children }: Props) {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-bg-secondary)]">
-      <header className="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-bg-primary)]">
+    <div className="flex min-h-screen flex-col">
+      <header
+        className="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-bg-primary)] backdrop-blur-xl"
+        style={{
+          backgroundColor: 'color-mix(in oklab, var(--color-bg-primary) 68%, transparent)',
+        }}
+      >
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
             <Link
@@ -56,7 +61,7 @@ export async function NavShell({ user, current, children }: Props) {
                 href="/platform-admin"
                 data-tactil
                 title="Administración de la plataforma"
-                className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+                className="flex h-9 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] foco"
               >
                 <Wrench className="h-4 w-4" />
                 <span className="hidden sm:inline">Plataforma</span>
@@ -70,7 +75,7 @@ export async function NavShell({ user, current, children }: Props) {
                 type="submit"
                 data-tactil
                 title="Cerrar sesión"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+                className="foco flex h-9 w-9 items-center justify-center rounded-full text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] foco"
               >
                 <LogOut className="h-4 w-4" />
                 <span className="sr-only">Cerrar sesión</span>
@@ -88,7 +93,7 @@ export async function NavShell({ user, current, children }: Props) {
             <Link
               key={href}
               href={href}
-              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+              className="foco flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)]"
             >
               <Icono className="h-4 w-4" />
               {label}
@@ -102,7 +107,10 @@ export async function NavShell({ user, current, children }: Props) {
 
       <nav
         aria-label="Secciones"
-        className="fixed inset-x-0 bottom-0 z-20 flex border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] pb-[env(safe-area-inset-bottom)] sm:hidden"
+        className="fixed inset-x-0 bottom-0 z-20 flex border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] backdrop-blur-xl pb-[env(safe-area-inset-bottom)] sm:hidden"
+        style={{
+          backgroundColor: 'color-mix(in oklab, var(--color-bg-primary) 78%, transparent)',
+        }}
       >
         {destinos.map(({ href, label, icono: Icono }) => (
           <Link

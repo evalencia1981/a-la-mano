@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Phone, Star } from 'lucide-react';
 import { ProviderAvatar } from './provider-avatar';
-import { esUrgencia } from '@/lib/category-groups';
+import { esUrgencia, estiloTinte } from '@/lib/category-groups';
 import { armarMensajeContacto, getTelUrl, getWhatsappUrl } from '@/lib/contact';
 import type { Category, CommunityProvider, Provider, ProviderPhoto } from '@a-la-mano/db';
 
@@ -23,8 +23,8 @@ export interface DatosDeContacto {
  *    la ficha nunca queda con un hueco.
  *  - La acción de contacto vive acá, no dentro del detalle. Quien busca un
  *    plomero a las 11 de la noche no quiere leer una ficha, quiere escribir.
- *  - La franja lateral es el color del grupo de la categoría, así el ojo
- *    agrupa servicios parecidos al recorrer la lista.
+ *  - La ficha entera va teñida con el color del grupo de la categoría, así
+ *    el ojo agrupa servicios parecidos al recorrer la lista sin leer.
  *
  * El link que cubre la ficha se hace con `after:absolute inset-0` en vez de
  * envolver todo en un <a>: anidar anchors es inválido y rompería los botones
@@ -66,7 +66,11 @@ export function ProviderCard({
   );
 
   return (
-    <article className="group relative flex overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] transition-all focus-within:border-[var(--color-text-secondary)] hover:border-[var(--color-text-secondary)] hover:shadow-[0_2px_12px_rgba(15,31,26,0.06)]">
+    <article
+      data-interactiva
+      style={estiloTinte(category?.groupName)}
+      className="ficha group relative flex overflow-hidden"
+    >
       <ProviderAvatar
         photo={primaryPhoto}
         category={category}
@@ -128,7 +132,7 @@ export function ProviderCard({
                 </span>
               </>
             ) : (
-              <span className="text-[11px] text-[var(--color-text-secondary)]">Sin calificar</span>
+              <span className="pastilla text-[var(--color-text-secondary)]">Sin calificar</span>
             )}
           </div>
         </div>
@@ -142,7 +146,7 @@ export function ProviderCard({
               data-tactil
               /* Verde de WhatsApp, no el acento de la comunidad: la gente
                * reconoce ese botón antes de leerlo. */
-              className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#25D366] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+              className="flex flex-1 items-center justify-center gap-2 rounded-[var(--radio-control)] bg-[#25D366] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
             >
               <WhatsappIcon className="h-4 w-4" />
               WhatsApp
@@ -151,7 +155,7 @@ export function ProviderCard({
           <a
             href={getTelUrl(provider.phone)}
             data-tactil
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+            className="flex flex-1 items-center justify-center gap-2 rounded-[var(--radio-control)] border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] foco"
           >
             <Phone className="h-4 w-4" />
             Llamar

@@ -53,7 +53,7 @@ export default async function RecomendadosPage({ params }: Props) {
 
       {!ubicacion ? (
         /* Sin ciudad no hay forma de saber qué le queda cerca a esta comunidad. */
-        <div className="rounded-xl border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
+        <div className="rounded-[var(--radio-panel)] border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
           <h2 className="font-display text-lg font-semibold">Falta decir dónde queda tu comunidad</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
             Cargá la ciudad y el sector en la configuración y acá van a aparecer los proveedores
@@ -62,14 +62,14 @@ export default async function RecomendadosPage({ params }: Props) {
           <Link
             href={`/${tenantSlug}/settings`}
             data-tactil
-            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+            className="mt-5 inline-flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
           >
             <MapPin className="h-4 w-4" />
             Configurar ubicación
           </Link>
         </div>
       ) : recomendados.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
+        <div className="rounded-[var(--radio-panel)] border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
           <h2 className="font-display text-lg font-semibold">Todavía no hay nada para recomendarte</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
             Para aparecer acá, un proveedor tiene que estar en otra comunidad de {tenant.city} y

@@ -74,7 +74,7 @@ export function SuggestionCard({
               onChange={(e) => setReason(e.target.value)}
               placeholder="Motivo del rechazo (lo verá quien sugirió)"
               rows={2}
-              className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-2 py-1.5 text-sm"
+              className="w-full campo px-3 py-2 text-base sm:text-sm"
             />
             <div className="flex gap-2">
               <Button size="sm" variant="destructive" onClick={reject} disabled={isPending}>

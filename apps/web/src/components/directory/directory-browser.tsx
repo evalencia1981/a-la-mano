@@ -90,14 +90,14 @@ export function DirectoryBrowser({
           onChange={(e) => setTexto(e.target.value)}
           placeholder="Buscar plomero, uñas, Laureles…"
           aria-label="Buscar en el directorio"
-          className="h-12 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] pl-10 pr-10 text-base outline-none transition-colors placeholder:text-[var(--color-text-secondary)] focus:border-[var(--color-text-primary)]"
+          className="h-12 w-full campo pl-10 pr-10 text-base outline-none transition-colors placeholder:text-[var(--color-text-secondary)] focus:border-[var(--color-text-primary)]"
         />
         {texto && (
           <button
             type="button"
             onClick={() => setTexto('')}
             aria-label="Limpiar búsqueda"
-            className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
+            className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-[var(--radio-control)] text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
           >
             <X className="h-4 w-4" />
           </button>
@@ -129,7 +129,7 @@ export function DirectoryBrowser({
       </p>
 
       {visibles.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
+        <div className="rounded-[var(--radio-panel)] border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
           <p className="font-display text-lg font-semibold">Nadie por acá todavía</p>
           <p className="mx-auto mt-1 max-w-sm text-sm text-[var(--color-text-secondary)]">
             {texto
@@ -173,7 +173,7 @@ function Chip({
       onClick={onClick}
       data-tactil
       aria-pressed={activo}
-      className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)] ${
+      className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors foco ${
         activo
           ? 'border-[var(--color-text-primary)] bg-[var(--color-text-primary)] text-[var(--color-bg-primary)]'
           : 'border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)]'

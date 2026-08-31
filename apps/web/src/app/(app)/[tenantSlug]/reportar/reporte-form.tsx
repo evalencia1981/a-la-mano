@@ -55,7 +55,7 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
 
   if (enviado) {
     return (
-      <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-6 py-10 text-center">
+      <div className="superficie rounded-[var(--radio-ficha)] px-6 py-10 text-center">
         <div
           aria-hidden
           className="mx-auto flex h-12 w-12 items-center justify-center rounded-full"
@@ -76,7 +76,7 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
             setTipo(null);
             setDescripcion('');
           }}
-          className="mt-5 rounded-lg border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)]"
+          className="mt-5 rounded-[var(--radio-control)] border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)]"
         >
           Reportar otra cosa
         </button>
@@ -107,7 +107,7 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
 
       {tipo && (
         <>
-          <p className="rounded-lg bg-[var(--color-bg-secondary)] px-3 py-2 text-sm text-[var(--color-text-secondary)]">
+          <p className="rounded-[var(--radio-control)] bg-[var(--color-bg-secondary)] px-3 py-2 text-sm text-[var(--color-text-secondary)]">
             {tipo.ejemplo}
           </p>
 
@@ -132,7 +132,7 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
                 placeholder="Qué pasó y a qué hora."
-                className="w-full flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2.5 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
+                className="w-full flex-1 campo px-3 py-2.5 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
               />
               <BotonMicrofono
                 valor={descripcion}
@@ -156,7 +156,7 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
         type="submit"
         data-tactil
         disabled={isPending || !tipo}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-accent-primary)] px-4 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+        className="flex w-full items-center justify-center gap-2 rounded-[var(--radio-panel)] bg-[var(--color-accent-primary)] px-4 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 foco"
       >
         <Send className="h-4 w-4" />
         {isPending ? 'Enviando…' : 'Enviar reporte'}
@@ -207,7 +207,7 @@ function Opcion({
       data-tactil
       onClick={onClick}
       aria-pressed={activo}
-      className={`flex items-center gap-2.5 rounded-xl border-2 px-3 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)] ${
+      className={`flex items-center gap-2.5 rounded-[var(--radio-panel)] border-2 px-3 py-3 text-left text-sm font-medium transition-colors foco ${
         activo
           ? 'border-[var(--color-text-primary)] bg-[var(--color-bg-secondary)]'
           : 'border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)]'

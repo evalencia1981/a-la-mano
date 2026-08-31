@@ -37,7 +37,7 @@ export function OnboardingChecklist({
   if (remaining === 0) return null;
 
   return (
-    <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4 text-sm">
+    <div className="superficie p-4 text-sm">
       <div className="mb-3 font-semibold">Empezar — {remaining} {remaining === 1 ? 'paso' : 'pasos'} pendientes</div>
       <ul className="space-y-2">
         {items.map((i) => (

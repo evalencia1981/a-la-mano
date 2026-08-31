@@ -51,7 +51,7 @@ export function PuestosEditor({ tenantId, puestos }: Props) {
       {error && (
         <p
           role="alert"
-          className="rounded-lg border border-[var(--color-error)] px-3 py-2 text-sm text-[var(--color-error)]"
+          className="rounded-[var(--radio-control)] border border-[var(--color-error)] px-3 py-2 text-sm text-[var(--color-error)]"
         >
           {error}
         </p>
@@ -77,7 +77,7 @@ export function PuestosEditor({ tenantId, puestos }: Props) {
       )}
 
       {sugeridos.length > 0 && (
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4">
+        <div className="superficie p-4">
           <p className="text-sm text-[var(--color-text-secondary)]">
             Tocá los que tenga la unidad. El teléfono se carga después.
           </p>
@@ -109,7 +109,7 @@ export function PuestosEditor({ tenantId, puestos }: Props) {
               }}
               placeholder="Otro puesto…"
               aria-label="Agregar otro puesto"
-              className="h-11 flex-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
+              className="h-11 flex-1 campo px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
             />
             <button
               type="button"
@@ -119,7 +119,7 @@ export function PuestosEditor({ tenantId, puestos }: Props) {
                 ejecutar(() => crearPuestosAction(tenantId, [{ name: nombre.trim() }]));
                 setNombre('');
               }}
-              className="rounded-lg border border-[var(--color-border)] px-4 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+              className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-4 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
             >
               Agregar
             </button>
@@ -150,7 +150,7 @@ function PuestoItem({
   const sucio = name.trim() !== puesto.name || phone.trim() !== (puesto.phone ?? '');
 
   return (
-    <li className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-3">
+    <li className="superficie p-3">
       <div className="flex flex-wrap items-center gap-2">
         <Icono
           className="h-5 w-5 shrink-0 text-[var(--color-text-secondary)]"
@@ -162,7 +162,7 @@ function PuestoItem({
           disabled={deshabilitado}
           onChange={(e) => setName(e.target.value)}
           aria-label={`Nombre de ${puesto.name}`}
-          className={`h-10 min-w-32 flex-1 rounded-lg border border-transparent bg-transparent px-2 text-base font-medium outline-none transition-colors hover:border-[var(--color-border)] focus:border-[var(--color-text-primary)] ${
+          className={`h-10 min-w-32 flex-1 rounded-[var(--radio-control)] border border-transparent bg-transparent px-2 text-base font-medium outline-none transition-colors hover:border-[var(--color-border)] focus:border-[var(--color-text-primary)] ${
             puesto.isActive ? '' : 'line-through opacity-50'
           }`}
         />
@@ -181,7 +181,7 @@ function PuestoItem({
             disabled={deshabilitado}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="WhatsApp (573001234567)"
-            className="h-10 w-full min-w-0 sm:w-52 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-2 text-sm outline-none transition-colors focus:border-[var(--color-text-primary)]"
+            className="h-10 w-full min-w-0 sm:w-52 campo px-2 text-base sm:text-sm outline-none transition-colors focus:border-[var(--color-text-primary)]"
           />
         </label>
 
@@ -191,7 +191,7 @@ function PuestoItem({
             data-tactil
             disabled={deshabilitado || !name.trim()}
             onClick={() => onGuardar(name.trim(), phone.trim())}
-            className="rounded-lg bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+            className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
           >
             Guardar
           </button>

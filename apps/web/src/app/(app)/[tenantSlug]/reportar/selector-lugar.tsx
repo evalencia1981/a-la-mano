@@ -183,7 +183,7 @@ export function SelectorLugar({ tenantId, esAdmin, torres, zonas }: Props) {
               onChange={(e) => setTexto(e.target.value)}
               placeholder="Torre 3, parqueadero sótano 1, gimnasio…"
               aria-label="Dónde pasó"
-              className="h-12 flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
+              className="h-12 flex-1 campo px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
             />
             <BotonMicrofono
               valor={texto}
@@ -200,7 +200,7 @@ export function SelectorLugar({ tenantId, esAdmin, torres, zonas }: Props) {
               data-tactil
               disabled={isPending}
               onClick={crearYElegir}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--color-accent-primary)] px-3 py-2.5 text-sm font-medium text-[var(--color-accent-primary)] transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+              className="flex w-full items-center justify-center gap-2 rounded-[var(--radio-panel)] border-2 border-dashed border-[var(--color-accent-primary)] px-3 py-2.5 text-sm font-medium text-[var(--color-accent-primary)] transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
             >
               <Plus className="h-4 w-4" aria-hidden />
               {isPending
@@ -267,7 +267,7 @@ function Chip({
       data-tactil
       onClick={onClick}
       aria-pressed={activo}
-      className={`rounded-full border-2 px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)] ${
+      className={`rounded-full border-2 px-3 py-1.5 text-sm font-medium transition-colors foco ${
         activo
           ? 'border-[var(--color-text-primary)] bg-[var(--color-bg-secondary)]'
           : 'border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)]'

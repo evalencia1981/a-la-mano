@@ -73,7 +73,7 @@ export function CreateTenantForm() {
           id="type"
           name="type"
           defaultValue="residential"
-          className="h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-sm"
+          className="h-11 w-full campo px-3.5 text-base sm:text-sm"
         >
           <option value="residential">Unidad residencial</option>
           <option value="religious">Congregación religiosa</option>

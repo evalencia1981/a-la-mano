@@ -55,7 +55,7 @@ export function RatingStars({
           onClick={() => onChange?.(n)}
           aria-label={`${n} ${n === 1 ? 'estrella' : 'estrellas'}`}
           aria-pressed={n === Math.round(value)}
-          className="rounded transition-transform hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          className="rounded transition-transform hover:scale-110 foco"
         >
           <Star
             width={size}

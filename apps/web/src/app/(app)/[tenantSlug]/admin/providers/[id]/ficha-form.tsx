@@ -85,7 +85,7 @@ export function FichaForm({ tenantId, providerId, comunidades, inicial }: Props)
   return (
     <div className="space-y-4">
       {comunidades > 1 && (
-        <p className="flex items-start gap-2 rounded-lg bg-[var(--color-bg-secondary)] px-3 py-2.5 text-sm">
+        <p className="flex items-start gap-2 rounded-[var(--radio-control)] bg-[var(--color-bg-secondary)] px-3 py-2.5 text-sm">
           <AlertTriangle
             className="mt-0.5 h-4 w-4 shrink-0"
             style={{ color: 'var(--color-urgencia)' }}
@@ -204,7 +204,7 @@ export function FichaForm({ tenantId, providerId, comunidades, inicial }: Props)
           data-tactil
           disabled={isPending || !sucio || !name.trim() || !phone.trim()}
           onClick={guardar}
-          className="h-11 rounded-xl bg-[var(--color-accent-primary)] px-5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+          className="h-11 rounded-[var(--radio-panel)] bg-[var(--color-accent-primary)] px-5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           {isPending ? 'Guardando…' : 'Guardar cambios'}
         </button>
@@ -221,7 +221,7 @@ export function FichaForm({ tenantId, providerId, comunidades, inicial }: Props)
 }
 
 const CLASE_INPUT =
-  'h-11 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]';
+  'h-11 w-full campo px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]';
 
 function Campo({
   etiqueta,

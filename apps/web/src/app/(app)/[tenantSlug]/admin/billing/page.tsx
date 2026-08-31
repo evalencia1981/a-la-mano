@@ -34,7 +34,7 @@ export default async function BillingPage({ params, searchParams }: Props) {
       </header>
 
       {activated === 'mock' && (
-        <div className="rounded-md border border-[var(--color-success)] bg-[var(--color-success)]/10 px-3 py-2 text-sm">
+        <div className="rounded-[var(--radio-control)] border border-[var(--color-success)] bg-[var(--color-success)]/10 px-3 py-2 text-sm">
           Suscripción simulada activada. (TODO: reemplazar por Stripe real.)
         </div>
       )}

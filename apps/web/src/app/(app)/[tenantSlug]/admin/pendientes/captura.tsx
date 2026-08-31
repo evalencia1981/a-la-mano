@@ -154,7 +154,7 @@ export function Captura({
   }
 
   return (
-    <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4">
+    <section className="superficie p-4">
       {/* En el teléfono el campo se lleva la primera fila entera y el
           micrófono con Guardar bajan a la segunda: apretados en una sola
           línea, el campo quedaba en la mitad del ancho y el botón de dictar
@@ -169,7 +169,7 @@ export function Captura({
           onKeyDown={(e) => e.key === 'Enter' && guardar()}
           placeholder="Torre 2 cambiar lámpara del corredor, electricidad…"
           aria-label="Qué hay que hacer"
-          className="h-12 w-full min-w-0 basis-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)] sm:w-auto sm:flex-1 sm:basis-0"
+          className="h-12 w-full min-w-0 basis-full campo px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)] sm:w-auto sm:flex-1 sm:basis-0"
         />
         <BotonMicrofono
           valor={texto}
@@ -183,7 +183,7 @@ export function Captura({
           data-tactil
           disabled={isPending || !texto.trim()}
           onClick={guardar}
-          className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--color-accent-primary)] px-4 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 sm:flex-none sm:text-sm"
+          className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-[var(--radio-panel)] bg-[var(--color-accent-primary)] px-4 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 sm:flex-none sm:text-sm"
         >
           <Plus className="h-4 w-4 shrink-0" aria-hidden />
           {isPending ? 'Guardando…' : 'Guardar'}
@@ -193,7 +193,7 @@ export function Captura({
       {/* Lo que se entendió de lo dictado. Aparece solo cuando se pidió
           contactar a alguien: si no, estorba. */}
       {preguntandoProveedor && (
-        <div className="mt-3 rounded-xl border-2 border-[var(--color-accent-primary)] p-3">
+        <div className="mt-3 rounded-[var(--radio-panel)] border-2 border-[var(--color-accent-primary)] p-3">
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <span className="font-semibold">
               {interpretacion.pidioExplicito
@@ -216,7 +216,7 @@ export function Captura({
                 data-tactil
                 disabled={isPending}
                 onClick={() => guardarYCotizar(p)}
-                className="flex max-w-full items-center gap-1.5 rounded-2xl border border-[var(--color-border)] px-3 py-2 text-left text-sm transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+                className="flex max-w-full items-center gap-1.5 rounded-[var(--radio-ficha)] border border-[var(--color-border)] px-3 py-2 text-left text-sm transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
               >
                 <Send className="h-3.5 w-3.5 shrink-0" aria-hidden />
                 <span className="min-w-0">

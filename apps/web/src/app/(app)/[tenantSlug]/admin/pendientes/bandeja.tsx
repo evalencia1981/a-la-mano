@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Copy, MapPin, Send, Star, X } from 'lucide-react';
+import { estiloTinteColor } from '@/lib/category-groups';
 import { COLOR_ESTADO, ESTADOS_TAREA, type EstadoTarea } from '@/lib/task-types';
 import { compararPorCalificacion, estaAvalado } from '@/lib/rating';
 import {
@@ -78,7 +79,7 @@ export function Bandeja({ tenantId, puestos, proveedores, filas, vacioPorFiltro 
 
   if (filas.length === 0) {
     return (
-      <p className="rounded-xl border border-[var(--color-border)] px-4 py-8 text-center text-sm text-[var(--color-text-secondary)]">
+      <p className="rounded-[var(--radio-panel)] border border-[var(--color-border)] px-4 py-8 text-center text-sm text-[var(--color-text-secondary)]">
         {vacioPorFiltro ? 'Hoy no metiste ningún pendiente.' : 'Todavía no hay pendientes.'}
       </p>
     );
@@ -89,7 +90,7 @@ export function Bandeja({ tenantId, puestos, proveedores, filas, vacioPorFiltro 
       {error && (
         <p
           role="alert"
-          className="rounded-lg border border-[var(--color-error)] px-3 py-2 text-sm text-[var(--color-error)]"
+          className="rounded-[var(--radio-control)] border border-[var(--color-error)] px-3 py-2 text-sm text-[var(--color-error)]"
         >
           {error}
         </p>
@@ -148,9 +149,8 @@ function TareaItem({
 
   return (
     <li
-      className={`rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-3 ${
-        resuelto ? 'opacity-60' : ''
-      }`}
+      style={estiloTinteColor(COLOR_ESTADO[estado])}
+      className={`ficha p-3.5 ${resuelto ? 'opacity-60' : ''}`}
     >
       <div className="flex items-start gap-2">
         <span
@@ -185,7 +185,7 @@ function TareaItem({
       {/* El enlace queda a la vista solo cuando el puesto no tiene WhatsApp
           cargado: ahí no hay a dónde abrirlo y hay que poder copiarlo. */}
       {enlace && (
-        <div className="mt-2 flex items-center gap-2 rounded-lg bg-[var(--color-bg-secondary)] px-3 py-2">
+        <div className="mt-2 flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-bg-secondary)] px-3 py-2">
           <code className="min-w-0 flex-1 truncate text-xs">{enlace}</code>
           <button
             type="button"
@@ -222,7 +222,7 @@ function TareaItem({
             }}
             placeholder="¿Por qué se suspende?"
             aria-label="Motivo de la suspensión"
-            className="h-10 flex-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-sm outline-none focus:border-[var(--color-text-primary)]"
+            className="h-10 flex-1 campo px-3 text-base sm:text-sm outline-none focus:border-[var(--color-text-primary)]"
           />
           <button
             type="button"
@@ -233,7 +233,7 @@ function TareaItem({
               setSuspendiendo(false);
               setMotivo('');
             }}
-            className="rounded-lg border border-[var(--color-border)] px-3 text-sm font-medium hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+            className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-3 text-sm font-medium hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
           >
             Suspender
           </button>
@@ -308,7 +308,7 @@ function TareaItem({
                 else if (fila.proveedor) onDespachar(fila.proveedor.id, true);
                 else setEligiendoDestino((v) => !v);
               }}
-              className="flex items-center gap-1 rounded-lg border border-[var(--color-border)] px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+              className="flex items-center gap-1 rounded-[var(--radio-control)] border border-[var(--color-border)] px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
             >
               <Send className="h-3.5 w-3.5" aria-hidden />
               Despachar
@@ -343,7 +343,7 @@ function Accion({
       data-tactil
       disabled={deshabilitado}
       onClick={onClick}
-      className="rounded-lg border border-[var(--color-border)] px-2.5 py-1.5 text-sm transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+      className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-2.5 py-1.5 text-sm transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
     >
       {label}
     </button>

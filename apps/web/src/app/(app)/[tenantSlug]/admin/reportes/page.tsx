@@ -51,7 +51,7 @@ export default async function ReportesPage({ params }: Props) {
       {/* Lo que se repite es lo que se puede sustentar: en una asamblea, ante
           el consejo, o el día que haya que demostrar que estaba advertido. */}
       {repetidos.length > 0 && (
-        <section className="space-y-2 rounded-xl border border-[var(--color-border)] p-4">
+        <section className="space-y-2 rounded-[var(--radio-panel)] border border-[var(--color-border)] p-4">
           <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
             <TriangleAlert
               className="h-4 w-4"
@@ -98,7 +98,7 @@ export default async function ReportesPage({ params }: Props) {
       )}
 
       {reportes.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
+        <div className="rounded-[var(--radio-panel)] border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
           <h2 className="font-display text-lg font-semibold">Nadie reportó nada todavía</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
             Contale a los vecinos que pueden reportar desde la app lo que hoy escriben en el

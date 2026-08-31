@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import { ClipboardList, MapPin } from 'lucide-react';
 import { taskService } from '@/server/services/task.service';
-import { ESTADOS_TAREA, type EstadoTarea } from '@/lib/task-types';
+import { estiloTinteColor } from '@/lib/category-groups';
+import { COLOR_ESTADO, ESTADOS_TAREA, type EstadoTarea } from '@/lib/task-types';
 import { AccionesTarea } from './acciones-tarea';
 
 export const metadata = { title: 'Pendiente' };
@@ -38,7 +39,10 @@ export default async function TareaPorEnlacePage({ params }: Props) {
   return (
     <main className="mx-auto min-h-screen w-full max-w-lg px-4 py-8">
       <div className="space-y-6">
-        <header className="space-y-2">
+        <header
+          style={estiloTinteColor(COLOR_ESTADO[estado])}
+          className="ficha space-y-2 p-5"
+        >
           <p className="text-sm text-[var(--color-text-secondary)]">
             {vista.comunidad} · para {vista.destinatario}
           </p>
@@ -51,7 +55,7 @@ export default async function TareaPorEnlacePage({ params }: Props) {
           </h1>
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--color-text-secondary)]">
-            <span>{ESTADOS_TAREA[estado]}</span>
+            <span className="pastilla">{ESTADOS_TAREA[estado]}</span>
             {vista.tarea.location && (
               <span className="flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5" aria-hidden />
@@ -68,7 +72,7 @@ export default async function TareaPorEnlacePage({ params }: Props) {
         </header>
 
         {vista.tarea.description && (
-          <p className="rounded-xl border border-[var(--color-border)] px-4 py-3 text-[15px]">
+          <p className="rounded-[var(--radio-panel)] border border-[var(--color-border)] px-4 py-3 text-[15px]">
             {vista.tarea.description}
           </p>
         )}
@@ -76,7 +80,7 @@ export default async function TareaPorEnlacePage({ params }: Props) {
         {vista.editable ? (
           <AccionesTarea token={token} estadoActual={estado} />
         ) : (
-          <p className="rounded-xl bg-[var(--color-bg-secondary)] px-4 py-3 text-sm text-[var(--color-text-secondary)]">
+          <p className="rounded-[var(--radio-panel)] bg-[var(--color-bg-secondary)] px-4 py-3 text-sm text-[var(--color-text-secondary)]">
             {vista.motivoBloqueo}
           </p>
         )}

@@ -66,7 +66,7 @@ export function MapaEditor({ tenantId, torres, zonas, pendientes }: Props) {
       {error && (
         <p
           role="alert"
-          className="rounded-lg border border-[var(--color-error)] px-3 py-2 text-sm text-[var(--color-error)]"
+          className="rounded-[var(--radio-control)] border border-[var(--color-error)] px-3 py-2 text-sm text-[var(--color-error)]"
         >
           {error}
         </p>
@@ -120,7 +120,7 @@ export function MapaEditor({ tenantId, torres, zonas, pendientes }: Props) {
 
 function Bienvenida() {
   return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-4">
+    <div className="rounded-[var(--radio-panel)] border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-4">
       <h2 className="font-display text-base font-semibold">Todavía no cargaste el mapa</h2>
       <p className="mt-1.5 max-w-2xl text-sm text-[var(--color-text-secondary)]">
         Empezá por las torres —agregá una y decí cuántos pisos tiene, los pisos se crean
@@ -144,7 +144,7 @@ function SeccionPendientes({
   onCrear: (nombre: string, kind: 'torre' | 'zona') => void;
 }) {
   return (
-    <section className="rounded-xl border-2 border-[var(--color-urgencia)] bg-[var(--color-bg-primary)] p-4">
+    <section className="superficie border-2 border-[var(--color-urgencia)] p-4">
       <h2 className="font-display text-base font-semibold">Mencionados en reportes, sin cargar</h2>
       <p className="mt-1 max-w-2xl text-sm text-[var(--color-text-secondary)]">
         Alguien reportó algo acá y el lugar no está en el mapa. Al agregarlo, los reportes
@@ -155,7 +155,7 @@ function SeccionPendientes({
         {pendientes.map((p) => (
           <li
             key={p.texto}
-            className="flex flex-wrap items-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2.5"
+            className="flex flex-wrap items-center gap-2 rounded-[var(--radio-control)] border border-[var(--color-border)] px-3 py-2.5"
           >
             <MapPin className="h-4 w-4 shrink-0 text-[var(--color-text-secondary)]" aria-hidden />
             <span className="font-medium">{p.texto}</span>
@@ -169,7 +169,7 @@ function SeccionPendientes({
                 data-tactil
                 disabled={deshabilitado}
                 onClick={() => onCrear(p.texto, 'torre')}
-                className="rounded-lg border border-[var(--color-border)] px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+                className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
               >
                 Es una torre
               </button>
@@ -178,7 +178,7 @@ function SeccionPendientes({
                 data-tactil
                 disabled={deshabilitado}
                 onClick={() => onCrear(p.texto, 'zona')}
-                className="rounded-lg border border-[var(--color-border)] px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+                className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
               >
                 Es una zona
               </button>
@@ -221,7 +221,7 @@ function SeccionTorres({
   }
 
   return (
-    <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4">
+    <section className="superficie p-4">
       <h2 className="font-display text-base font-semibold">Torres y bloques</h2>
 
       {torres.length > 0 && (
@@ -252,7 +252,7 @@ function SeccionTorres({
             onChange={(e) => setNombre(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && agregar()}
             placeholder="Torre 1, Bloque A…"
-            className="h-11 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
+            className="h-11 w-full campo px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
           />
         </div>
         <div className="w-28 space-y-1">
@@ -266,7 +266,7 @@ function SeccionTorres({
             onChange={(e) => setPisos(e.target.value.replace(/\D/g, '').slice(0, 2))}
             onKeyDown={(e) => e.key === 'Enter' && agregar()}
             placeholder="0"
-            className="h-11 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
+            className="h-11 w-full campo px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
           />
         </div>
         <button
@@ -274,7 +274,7 @@ function SeccionTorres({
           data-tactil
           disabled={deshabilitado || !nombre.trim()}
           onClick={agregar}
-          className="flex h-11 items-center gap-1.5 rounded-lg bg-[var(--color-accent-primary)] px-4 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+          className="flex h-11 items-center gap-1.5 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           <Plus className="h-4 w-4" aria-hidden />
           Agregar
@@ -307,7 +307,7 @@ function TorreItem({
   const Chevron = abierta ? ChevronDown : ChevronRight;
 
   return (
-    <li className="rounded-lg border border-[var(--color-border)]">
+    <li className="rounded-[var(--radio-control)] border border-[var(--color-border)]">
       <div className="flex items-center gap-2 px-3 py-2.5">
         <button
           type="button"
@@ -359,7 +359,7 @@ function TorreItem({
               }}
               placeholder="Piso 6, Sótano, Terraza…"
               aria-label={`Agregar piso a ${torre.lugar.name}`}
-              className="h-10 flex-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-sm outline-none transition-colors focus:border-[var(--color-text-primary)]"
+              className="h-10 flex-1 campo px-3 text-base sm:text-sm outline-none transition-colors focus:border-[var(--color-text-primary)]"
             />
             <button
               type="button"
@@ -369,7 +369,7 @@ function TorreItem({
                 onAgregarPiso(torre.lugar.id, nuevoPiso.trim());
                 setNuevoPiso('');
               }}
-              className="rounded-lg border border-[var(--color-border)] px-3 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+              className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-3 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
             >
               Agregar piso
             </button>
@@ -412,7 +412,7 @@ function SeccionZonas({
   }
 
   return (
-    <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4">
+    <section className="superficie p-4">
       <h2 className="font-display text-base font-semibold">Zonas comunes</h2>
 
       {zonas.length > 0 && (
@@ -420,7 +420,7 @@ function SeccionZonas({
           {zonas.map((z) => (
             <li
               key={z.id}
-              className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2.5"
+              className="flex items-center gap-2 rounded-[var(--radio-control)] border border-[var(--color-border)] px-3 py-2.5"
             >
               <MapPin className="h-4 w-4 shrink-0 text-[var(--color-text-secondary)]" aria-hidden />
               <NombreLugar lugar={z} deshabilitado={deshabilitado} onRenombrar={onRenombrar} />
@@ -468,14 +468,14 @@ function SeccionZonas({
           onKeyDown={(e) => e.key === 'Enter' && agregar()}
           placeholder="Otra zona…"
           aria-label="Agregar otra zona común"
-          className="h-11 flex-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
+          className="h-11 flex-1 campo px-3 text-base outline-none transition-colors focus:border-[var(--color-text-primary)]"
         />
         <button
           type="button"
           data-tactil
           disabled={deshabilitado || !nombre.trim()}
           onClick={agregar}
-          className="rounded-lg border border-[var(--color-border)] px-4 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+          className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-4 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
         >
           Agregar
         </button>
@@ -517,7 +517,7 @@ function NombreLugar({
               setEditando(false);
             }
           }}
-          className="h-9 flex-1 rounded-lg border border-[var(--color-text-primary)] bg-[var(--color-bg-primary)] px-2 text-sm outline-none"
+          className="h-9 flex-1 rounded-[var(--radio-control)] border border-[var(--color-text-primary)] bg-[var(--color-bg-primary)] px-2 text-sm outline-none"
         />
         <button
           type="button"

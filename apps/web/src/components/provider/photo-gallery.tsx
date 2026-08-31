@@ -21,7 +21,7 @@ export function PhotoGallery({ photos }: { photos: ProviderPhoto[] }) {
 
   return (
     <div className="space-y-2">
-      <div className="relative aspect-video overflow-hidden rounded-2xl bg-[var(--color-bg-secondary)]">
+      <div className="relative aspect-video overflow-hidden rounded-[var(--radio-ficha)] bg-[var(--color-bg-secondary)]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={actual.publicUrl}
@@ -54,7 +54,7 @@ export function PhotoGallery({ photos }: { photos: ProviderPhoto[] }) {
               onClick={() => setIndex(i)}
               aria-label={`Ver foto ${i + 1}`}
               aria-current={i === index}
-              className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)] ${
+              className={`h-14 w-20 shrink-0 overflow-hidden rounded-[var(--radio-control)] border-2 transition-colors foco ${
                 i === index ? 'border-[var(--color-text-primary)]' : 'border-transparent opacity-70'
               }`}
             >

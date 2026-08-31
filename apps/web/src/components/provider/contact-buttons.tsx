@@ -30,7 +30,7 @@ export function ContactButtons({
       <a
         href={getTelUrl(provider.phone)}
         data-tactil
-        className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+        className="flex items-center gap-2 rounded-[var(--radio-control)] border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] foco"
       >
         <Phone className="h-4 w-4" />
         Llamar

@@ -55,7 +55,7 @@ export default async function ProviderDetailPage({ params }: Props) {
       ) : (
         /* Sin fotos: el ícono del oficio sostiene la cabecera. A quien puede
          * resolverlo le ofrecemos el atajo para subirlas acá mismo. */
-        <div className="relative overflow-hidden rounded-2xl">
+        <div className="relative overflow-hidden rounded-[var(--radio-ficha)]">
           <ProviderAvatar
             photo={null}
             category={category}
@@ -67,7 +67,7 @@ export default async function ProviderDetailPage({ params }: Props) {
             <Link
               href={`/${tenantSlug}/admin/providers/${communityProvider.id}`}
               data-tactil
-              className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-[var(--color-bg-primary)] px-3 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-[var(--color-bg-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="absolute bottom-3 right-3 flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-[var(--color-bg-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <ImagePlus className="h-4 w-4" />
               Agregar fotos

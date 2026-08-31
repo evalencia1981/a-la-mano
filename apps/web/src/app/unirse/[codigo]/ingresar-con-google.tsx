@@ -18,7 +18,7 @@ export function IngresarConGoogle({ codigo }: { codigo: string }) {
       onClick={() =>
         startTransition(() => signInWithOAuthAction('google', `/unirse/${codigo}`))
       }
-      className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-3.5 text-[15px] font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+      className="flex w-full items-center justify-center gap-3 superficie px-4 py-3.5 text-[15px] font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-60 foco"
     >
       <GoogleIcon className="h-5 w-5" />
       {isPending ? 'Abriendo Google…' : 'Entrar con Google'}

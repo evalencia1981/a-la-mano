@@ -64,7 +64,7 @@ export function MembersTable({ members, tenantId, actorRole }: Props) {
                     defaultValue={member.role}
                     onChange={(e) => handleRoleChange(member.userId, e.target.value)}
                     disabled={isPending}
-                    className="h-8 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-2 text-xs"
+                    className="h-9 campo px-2.5 text-xs"
                   >
                     {TENANT_ROLES.map((r) => (
                       <option key={r} value={r}>

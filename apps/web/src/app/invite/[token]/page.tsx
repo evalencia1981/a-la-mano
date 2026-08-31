@@ -95,7 +95,7 @@ export default async function InviteAcceptPage({ params }: Props) {
           )}
 
           {user && user.email.toLowerCase() !== invitation.email.toLowerCase() && (
-            <div className="rounded-md border border-[var(--color-error)] bg-[var(--color-error)]/10 p-3 text-sm">
+            <div className="rounded-[var(--radio-control)] border border-[var(--color-error)] bg-[var(--color-error)]/10 p-3 text-sm">
               Estás logueado como <strong>{user.email}</strong>, pero la invitación es para{' '}
               <strong>{invitation.email}</strong>. Cerrá sesión y entrá con esa cuenta.
             </div>
@@ -112,7 +112,7 @@ export default async function InviteAcceptPage({ params }: Props) {
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[var(--color-bg-secondary)] px-4 py-12">
+    <main className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">{children}</div>
     </main>
   );

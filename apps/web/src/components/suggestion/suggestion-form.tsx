@@ -47,7 +47,7 @@ export function SuggestionForm({
             id="categoryId"
             name="categoryId"
             required
-            className="h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-sm"
+            className="h-11 w-full campo px-3.5 text-base sm:text-sm"
           >
             <option value="">Elegí una</option>
             {categories.map((c) => (
@@ -95,7 +95,7 @@ export function SuggestionForm({
           name="description"
           maxLength={1000}
           rows={3}
-          className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm"
+          className="w-full campo px-3.5 py-2.5 text-base sm:text-sm"
         />
       </div>
 
@@ -106,7 +106,7 @@ export function SuggestionForm({
           name="memberNote"
           maxLength={500}
           rows={2}
-          className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm"
+          className="w-full campo px-3.5 py-2.5 text-base sm:text-sm"
           placeholder="Por qué lo recomendás, contexto..."
         />
       </div>

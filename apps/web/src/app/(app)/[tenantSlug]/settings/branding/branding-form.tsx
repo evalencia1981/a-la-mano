@@ -16,8 +16,8 @@ import type { Tenant } from '@a-la-mano/db';
 export function BrandingForm({ tenant, disabled }: { tenant: Tenant; disabled: boolean }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [primary, setPrimary] = useState(tenant.primaryColor ?? '#3B82F6');
-  const [secondary, setSecondary] = useState(tenant.secondaryColor ?? '#1E40AF');
+  const [primary, setPrimary] = useState(tenant.primaryColor ?? '#0C6478');
+  const [secondary, setSecondary] = useState(tenant.secondaryColor ?? '#15919B');
   const [status, setStatus] = useState<{ kind: 'idle' | 'ok' | 'error'; message?: string }>({
     kind: 'idle',
   });

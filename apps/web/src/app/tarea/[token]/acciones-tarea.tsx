@@ -47,7 +47,7 @@ export function AccionesTarea({ token, estadoActual }: Props) {
 
   if (listo) {
     return (
-      <div className="rounded-xl border border-[var(--color-border)] px-4 py-6 text-center">
+      <div className="rounded-[var(--radio-panel)] border border-[var(--color-border)] px-4 py-6 text-center">
         <div
           aria-hidden
           className="mx-auto flex h-11 w-11 items-center justify-center rounded-full"
@@ -92,7 +92,7 @@ export function AccionesTarea({ token, estadoActual }: Props) {
       )}
 
       {suspendiendo && (
-        <div className="space-y-2 rounded-xl border border-[var(--color-border)] p-3">
+        <div className="space-y-2 rounded-[var(--radio-panel)] border border-[var(--color-border)] p-3">
           <label htmlFor="motivo" className="text-sm font-medium">
             ¿Por qué no se puede?
           </label>
@@ -104,7 +104,7 @@ export function AccionesTarea({ token, estadoActual }: Props) {
             onChange={(e) => setMotivo(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && motivo.trim() && mover('suspendido', motivo.trim())}
             placeholder="Falta el repuesto, no tengo acceso…"
-            className="h-12 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-base outline-none focus:border-[var(--color-text-primary)]"
+            className="h-12 w-full campo px-3 text-base outline-none focus:border-[var(--color-text-primary)]"
           />
           <div className="flex gap-2">
             <button
@@ -112,7 +112,7 @@ export function AccionesTarea({ token, estadoActual }: Props) {
               data-tactil
               disabled={isPending || !motivo.trim()}
               onClick={() => mover('suspendido', motivo.trim())}
-              className="flex-1 rounded-xl border border-[var(--color-border)] px-4 py-3 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
+              className="flex-1 rounded-[var(--radio-panel)] border border-[var(--color-border)] px-4 py-3 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40"
             >
               Enviar
             </button>
@@ -120,7 +120,7 @@ export function AccionesTarea({ token, estadoActual }: Props) {
               type="button"
               data-tactil
               onClick={() => setSuspendiendo(false)}
-              className="rounded-xl px-4 py-3 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
+              className="rounded-[var(--radio-panel)] px-4 py-3 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
             >
               Cancelar
             </button>
@@ -156,7 +156,7 @@ function Boton({
       data-tactil
       disabled={deshabilitado}
       onClick={onClick}
-      className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-4 text-base font-medium transition-opacity disabled:opacity-40 ${
+      className={`flex w-full items-center justify-center gap-2 rounded-[var(--radio-panel)] px-4 py-4 text-base font-medium transition-opacity disabled:opacity-40 ${
         destacado
           ? 'bg-[var(--color-accent-primary)] text-white hover:opacity-90'
           : 'border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)]'

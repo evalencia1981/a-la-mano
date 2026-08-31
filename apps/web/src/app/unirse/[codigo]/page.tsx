@@ -41,7 +41,7 @@ export default async function UnirsePage({ params }: Props) {
       <div className="w-full max-w-md space-y-6 text-center">
         <div
           aria-hidden
-          className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl"
+          className="mx-auto flex h-14 w-14 items-center justify-center rounded-[var(--radio-ficha)]"
           style={{ backgroundColor: tenant.primaryColor ?? 'var(--color-accent-primary)' }}
         >
           <Users className="h-7 w-7 text-white" />
@@ -57,7 +57,7 @@ export default async function UnirsePage({ params }: Props) {
         </div>
 
         {ingresoCerrado ? (
-          <div className="rounded-xl border border-dashed border-[var(--color-border)] px-6 py-8">
+          <div className="rounded-[var(--radio-panel)] border border-dashed border-[var(--color-border)] px-6 py-8">
             <p className="text-sm text-[var(--color-text-secondary)]">
               {tenant.name} cerró el ingreso por enlace. Pedile acceso a la administración.
             </p>

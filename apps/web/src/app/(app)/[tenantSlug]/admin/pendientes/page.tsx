@@ -106,7 +106,7 @@ export default async function PendientesPage({ params, searchParams }: Props) {
       <div className="flex items-center gap-2 text-sm">
         <Link
           href={`/${tenantSlug}/admin/pendientes`}
-          className={`rounded-lg px-3 py-1.5 transition-colors ${
+          className={`rounded-[var(--radio-control)] px-3 py-1.5 transition-colors ${
             soloHoy
               ? 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]'
               : 'bg-[var(--color-bg-secondary)] font-medium'
@@ -116,7 +116,7 @@ export default async function PendientesPage({ params, searchParams }: Props) {
         </Link>
         <Link
           href={`/${tenantSlug}/admin/pendientes?dia=hoy`}
-          className={`rounded-lg px-3 py-1.5 transition-colors ${
+          className={`rounded-[var(--radio-control)] px-3 py-1.5 transition-colors ${
             soloHoy
               ? 'bg-[var(--color-bg-secondary)] font-medium'
               : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]'

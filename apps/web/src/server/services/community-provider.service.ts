@@ -30,6 +30,16 @@ export const communityProviderService = {
     return communityProviderRepository.countByTenant(tenantId);
   },
 
+  /**
+   * Cuántos proveedores hay por categoría en esta comunidad. Lo usa la
+   * grilla de categorías para mostrar el dato al pie de cada ficha y para
+   * bajar al final las que la comunidad todavía no tiene.
+   */
+  async countByCategoryInTenant(tenantId: string) {
+    await assertTenantMember(tenantId);
+    return communityProviderRepository.countByCategory(tenantId, MINIMO_CALIFICACIONES);
+  },
+
   async listInTenantAdmin(tenantId: string, filters: CommunityProviderListFilters = {}) {
     await assertRole(tenantId, ['owner', 'admin']);
     return communityProviderRepository.listByTenant(tenantId, {

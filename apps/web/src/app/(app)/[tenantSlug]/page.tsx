@@ -5,7 +5,7 @@ import { ProviderCard } from '@/components/provider/provider-card';
 import { OnboardingChecklist } from '@/components/wizard/onboarding-checklist';
 import { getCurrentTenant } from '@/lib/auth/current-tenant';
 import { getCurrentUser } from '@/lib/auth/current-user';
-import { esUrgencia } from '@/lib/category-groups';
+import { esUrgencia, estiloTinteColor } from '@/lib/category-groups';
 import { categoryService } from '@/server/services/category.service';
 import { communityProviderService } from '@/server/services/community-provider.service';
 import { suggestionService } from '@/server/services/suggestion.service';
@@ -55,7 +55,7 @@ export default async function CommunityDashboardPage({ params }: Props) {
       <Link
         href={`/${tenantSlug}/directory`}
         data-tactil
-        className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-3.5 text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-text-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+        className="superficie foco flex items-center gap-3 px-4 py-4 text-[var(--color-text-secondary)] transition-shadow hover:shadow-[var(--sombra-alta)]"
       >
         <Search className="h-5 w-5 shrink-0" aria-hidden />
         <span className="flex-1 text-base">Buscar un servicio…</span>
@@ -79,7 +79,9 @@ export default async function CommunityDashboardPage({ params }: Props) {
         <Link
           href={`/${tenantSlug}/admin/suggestions`}
           data-tactil
-          className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] px-4 py-3 transition-colors hover:bg-[var(--color-bg-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          data-interactiva
+          style={estiloTinteColor('var(--color-accent-primary)')}
+          className="ficha foco flex items-center gap-3 px-4 py-3.5"
         >
           <Sparkles className="h-5 w-5 shrink-0 text-[var(--color-accent-primary)]" aria-hidden />
           <span className="flex-1 text-sm">
@@ -95,8 +97,8 @@ export default async function CommunityDashboardPage({ params }: Props) {
       {urgencias.length > 0 && (
         <section
           aria-labelledby="urgencias-dash"
-          className="rounded-xl px-4 py-3"
-          style={{ backgroundColor: 'var(--color-urgencia-suave)' }}
+          className="ficha px-4 py-3.5"
+          style={estiloTinteColor('var(--color-urgencia)')}
         >
           <h2
             id="urgencias-dash"
@@ -121,7 +123,7 @@ export default async function CommunityDashboardPage({ params }: Props) {
       )}
 
       <section className="space-y-3">
-        <div className="flex flex-wrap items-end justify-between gap-3 gap-3">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold">
             <Star
               className="h-4 w-4 fill-[var(--color-estrella)] text-[var(--color-estrella)]"
@@ -140,7 +142,7 @@ export default async function CommunityDashboardPage({ params }: Props) {
         </div>
 
         {destacados.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
+          <div className="rounded-[var(--radio-ficha)] border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
             <h3 className="font-display text-lg font-semibold">Empecemos por el primero</h3>
             <p className="mx-auto mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
               Pensá en ese plomero o esa señora del aseo que todos en la unidad se pasan por
@@ -149,7 +151,7 @@ export default async function CommunityDashboardPage({ params }: Props) {
             <Link
               href={isAdmin ? `/${tenantSlug}/admin/providers/new` : `/${tenantSlug}/suggest`}
               data-tactil
-              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+              className="mt-5 inline-flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
             >
               <Plus className="h-4 w-4" />
               {isAdmin ? 'Agregar el primero' : 'Sugerir un proveedor'}
@@ -197,7 +199,7 @@ function AccionSecundaria({
     <Link
       href={href}
       data-tactil
-      className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+      className="superficie foco flex items-center gap-2 rounded-[var(--radio-control)] px-3.5 py-2.5 text-sm font-medium transition-shadow hover:shadow-[var(--sombra-alta)]"
     >
       {icono}
       {children}

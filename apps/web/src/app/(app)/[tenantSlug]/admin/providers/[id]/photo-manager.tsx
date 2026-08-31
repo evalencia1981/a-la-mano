@@ -97,7 +97,7 @@ export function PhotoManager({
           {photos.map((p) => (
             <figure
               key={p.id}
-              className="overflow-hidden rounded-xl border border-[var(--color-border)]"
+              className="overflow-hidden rounded-[var(--radio-panel)] border border-[var(--color-border)]"
             >
               <div className="relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -107,7 +107,7 @@ export function PhotoManager({
                   className="aspect-video w-full object-cover"
                 />
                 {p.isPrimary && (
-                  <span className="absolute left-2 top-2 rounded-md bg-[var(--color-accent-primary)] px-2 py-0.5 text-[11px] font-semibold text-white">
+                  <span className="absolute left-2 top-2 rounded-full bg-[var(--color-accent-primary)] px-2 py-0.5 text-[11px] font-semibold text-white">
                     Principal
                   </span>
                 )}
@@ -119,7 +119,7 @@ export function PhotoManager({
                   data-tactil
                   disabled={isPending || p.isPrimary}
                   onClick={() => hacerPrincipal(p.id)}
-                  className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+                  className="flex items-center gap-1.5 rounded-[var(--radio-control)] px-2 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40 foco"
                 >
                   <Star
                     className={`h-3.5 w-3.5 ${p.isPrimary ? 'fill-[var(--color-estrella)] text-[var(--color-estrella)]' : ''}`}
@@ -132,7 +132,7 @@ export function PhotoManager({
                   disabled={isPending}
                   onClick={() => eliminar(p.id)}
                   title="Eliminar foto"
-                  className="flex items-center justify-center rounded-lg px-2 py-1.5 text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-error)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+                  className="flex items-center justify-center rounded-[var(--radio-control)] px-2 py-1.5 text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-error)] disabled:opacity-40 foco"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   <span className="sr-only">Eliminar foto</span>
@@ -164,7 +164,7 @@ export function PhotoManager({
           }}
           onDragLeave={() => setArrastrando(false)}
           onDrop={alSoltar}
-          className={`flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-8 text-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)] ${
+          className={`flex w-full flex-col items-center justify-center gap-2 rounded-[var(--radio-panel)] border-2 border-dashed px-6 py-8 text-center transition-colors foco ${
             arrastrando
               ? 'border-[var(--color-accent-primary)] bg-[var(--color-bg-secondary)]'
               : 'border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)]'

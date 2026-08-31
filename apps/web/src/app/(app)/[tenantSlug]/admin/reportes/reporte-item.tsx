@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
+import { estiloTinteColor } from '@/lib/category-groups';
 import { iconoDe } from '@/lib/category-icons';
 import {
   ESTADOS_INCIDENTE,
@@ -51,11 +52,16 @@ export function ReporteItem({
   }
 
   return (
-    <article className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4">
+    <article
+      style={estiloTinteColor(
+        esRiesgo ? 'var(--color-urgencia)' : 'var(--color-text-secondary)',
+      )}
+      className="ficha p-4"
+    >
       <div className="flex items-start gap-3">
         <span
           aria-hidden
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radio-control)]"
           style={{
             backgroundColor: esRiesgo ? 'var(--color-urgencia-suave)' : 'var(--color-bg-secondary)',
           }}
@@ -96,7 +102,7 @@ export function ReporteItem({
           {reporte.description && <p className="mt-2 text-sm">{reporte.description}</p>}
 
           {reporte.resolutionNote && (
-            <p className="mt-2 rounded-lg bg-[var(--color-bg-secondary)] px-3 py-2 text-sm">
+            <p className="mt-2 rounded-[var(--radio-control)] bg-[var(--color-bg-secondary)] px-3 py-2 text-sm">
               <strong className="font-medium">Se resolvió:</strong> {reporte.resolutionNote}
             </p>
           )}
@@ -119,21 +125,21 @@ export function ReporteItem({
                 maxLength={500}
                 autoFocus
                 placeholder="Se instaló señalización en la rampa."
-                className="h-11 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-sm outline-none focus:border-[var(--color-text-primary)]"
+                className="h-11 w-full campo px-3 text-base sm:text-sm outline-none focus:border-[var(--color-text-primary)]"
               />
               <div className="flex gap-2">
                 <button
                   type="button"
                   disabled={isPending}
                   onClick={() => cambiar('resuelto', nota)}
-                  className="rounded-lg bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                 >
                   {isPending ? 'Guardando…' : 'Marcar resuelto'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setResolviendo(false)}
-                  className="rounded-lg px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]"
+                  className="rounded-[var(--radio-control)] px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]"
                 >
                   Cancelar
                 </button>
@@ -181,7 +187,7 @@ function BotonEstado({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="rounded-lg border border-[var(--color-border)] px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+      className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40 foco"
     >
       {children}
     </button>

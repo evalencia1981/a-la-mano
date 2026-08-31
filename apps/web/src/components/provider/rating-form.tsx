@@ -67,7 +67,7 @@ export function RatingForm({
           onChange={(e) => setComentario(e.target.value)}
           maxLength={2000}
           rows={3}
-          className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2.5 text-[15px] outline-none transition-colors placeholder:text-[var(--color-text-secondary)] focus:border-[var(--color-text-primary)]"
+          className="w-full campo px-3 py-2.5 text-[15px] outline-none transition-colors placeholder:text-[var(--color-text-secondary)] focus:border-[var(--color-text-primary)]"
           placeholder="¿Llegó puntual? ¿Cobró lo que dijo? Lo que le sirva al vecino que lo lea."
         />
       </div>
@@ -82,7 +82,7 @@ export function RatingForm({
         type="submit"
         data-tactil
         disabled={isPending}
-        className="rounded-lg bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+        className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 foco"
       >
         {isPending ? 'Guardando…' : initial ? 'Actualizar calificación' : 'Publicar calificación'}
       </button>

@@ -248,6 +248,36 @@ export const communityProviderRepository = {
     }));
   },
 
+  /**
+   * Cuántos proveedores tiene la comunidad en cada categoría, y cuántos de
+   * ellos están avalados.
+   *
+   * Lo consume la grilla de categorías, que sin esto ofrece las 40 del
+   * catálogo por igual y manda al vecino a pantallas vacías. Con el conteo,
+   * la categoría que la comunidad realmente tiene se ve primero y la vacía
+   * queda al final, apagada pero visible — sigue sirviendo para sugerir un
+   * proveedor de ese oficio.
+   *
+   * Una sola consulta agrupada, no una por categoría.
+   */
+  async countByCategory(
+    tenantId: string,
+    minimoCalificaciones: number,
+  ): Promise<Map<string, { total: number; avalados: number }>> {
+    const rows = await db
+      .select({
+        categoryId: providers.categoryId,
+        total: sql<number>`count(*)::int`,
+        avalados: sql<number>`count(*) filter (where ${communityProviders.ratingCount} >= ${minimoCalificaciones})::int`,
+      })
+      .from(communityProviders)
+      .innerJoin(providers, eq(providers.id, communityProviders.providerId))
+      .where(and(eq(communityProviders.tenantId, tenantId), eq(communityProviders.isActive, true)))
+      .groupBy(providers.categoryId);
+
+    return new Map(rows.map((r) => [r.categoryId, { total: r.total, avalados: r.avalados }]));
+  },
+
   async countByTenant(tenantId: string): Promise<number> {
     const [row] = await db
       .select({ count: sql<number>`count(*)::int` })

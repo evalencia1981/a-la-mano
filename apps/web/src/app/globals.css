@@ -3,51 +3,97 @@
 /*
  * Identidad visual de A la Mano.
  *
- * Concepto: el fichero de la portería. La app reemplaza a la hoja pegada en
- * la cartelera con los teléfonos de confianza de la unidad, así que las
- * fichas se leen como fichas: pestaña de color por grupo de servicio,
- * nombre grande, y el contacto siempre a la vista.
+ * Paleta: una rampa verde → turquesa → navy.
+ *
+ *   #80EE98  menta      #46DFB1  aguamarina   #09D1C7  turquesa
+ *   #15919B  petróleo   #0C6478  azul profundo #213A58 navy
+ *
+ * Cómo se reparte, que es lo que hay que entender antes de moverla:
+ *
+ *  - Los dos extremos hacen el trabajo estructural. El navy es el TEXTO
+ *    (11:1 sobre el blanco de las tarjetas) y la menta es el FONDO. Ninguno
+ *    de los dos se usa de acento: son el papel y la tinta.
+ *  - Los cuatro del medio son el color de la interfaz — acentos, grupos de
+ *    categoría, íconos, bordes.
+ *  - Cuanto más claro el tono, menos texto aguanta encima. #09D1C7 y
+ *    #46DFB1 son fondos, nunca color de letra: sobre blanco dan 1.9:1 y
+ *    3.8:1. Por eso los tonos claros llevan tinta navy y los oscuros tinta
+ *    clara (ver `--color-grupo-*-tinta`).
  *
  * OJO con el acento: `--color-accent-primary/secondary` los pisa cada
  * comunidad en runtime desde `TenantThemeProvider`. No colgar de ellos la
  * identidad del producto — el acento es el color de la comunidad, no el
- * nuestro. Lo nuestro son los neutrales verdosos, la tipografía y la
- * estructura de la ficha.
+ * nuestro. Lo nuestro es la rampa, la tipografía y la estructura de la ficha.
  */
 @theme {
-  /* Neutrales: blanco con una gota de verde, no gris azulado de fábrica. */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f2f5f3;
-  --color-text-primary: #0f1f1a;
-  --color-text-secondary: #5c6b65;
-  --color-border: #dbe2de;
+  /* Neutrales derivados de la rampa: el blanco lleva una gota de menta y el
+   * "gris" es en realidad navy aclarado, no gris de fábrica. */
+  --color-bg-primary: #fbfefd;
+  --color-bg-secondary: #e9f7f3;
+  --color-text-primary: #213a58;
+  --color-text-secondary: #4a6a7b;
+  --color-border: #c7e4dd;
 
-  /* Acento por defecto (una comunidad sin branding propio hereda esto). */
-  --color-accent-primary: #0e5c43;
-  --color-accent-secondary: #0a4432;
+  /* Acento por defecto (una comunidad sin branding propio hereda esto).
+   * #0C6478 da 6.8:1 contra el blanco, así que aguanta texto blanco encima
+   * en un botón. Los turquesas de la rampa no: por eso el acento es este y
+   * no el color más vistoso. */
+  --color-accent-primary: #0c6478;
+  --color-accent-secondary: #15919b;
 
-  --color-success: #0e7a4a;
-  --color-error: #c02626;
-  --color-warning: #b45309;
-
-  /* Urgencias 24h. Aparece SOLO ahí — si se usa de adorno deja de avisar. */
-  --color-urgencia: #d9480f;
-  --color-urgencia-suave: #fdf0e9;
-
-  /* Ámbar de las calificaciones. Más profundo que el amarillo de fábrica
-   * para que sobre blanco no se lave. */
-  --color-estrella: #d99408;
+  /* Menta de la rampa. Solo para el degradado del fondo y lavados grandes:
+   * como color de texto o de ícono chico no llega a contraste. */
+  --color-menta: #80ee98;
 
   /*
-   * Un color por grupo de categoría (`categories.group_name`). Es la pestaña
-   * lateral de cada ficha: codifica información que ya existe en la base, no
-   * es decoración. Ver `lib/category-groups.ts`.
+   * Semánticos.
+   *
+   * El éxito sí sale de la rampa (aguamarina oscurecida hasta 5.4:1). El
+   * error, la urgencia y la estrella NO, y es a propósito: un error en
+   * turquesa no se lee como un error. De paso, naranja y dorado son el
+   * complemento del turquesa — contra esta paleta resaltan más que antes.
    */
-  --color-grupo-hogar: #0e5c43;
-  --color-grupo-limpieza: #1d6a8c;
-  --color-grupo-exterior: #4b7a1f;
-  --color-grupo-comunidad: #6b4ea0;
-  --color-grupo-otros: #8a6a3b;
+  --color-success: #12796a;
+  --color-error: #c42b3f;
+  --color-warning: #a65a0c;
+
+  /* Urgencias 24h. Aparece SOLO ahí — si se usa de adorno deja de avisar. */
+  --color-urgencia: #c0450a;
+  --color-urgencia-suave: #fdf0e7;
+
+  /* Ámbar de las calificaciones. Más profundo que el dorado obvio: a 3.3:1
+   * la estrella sigue siendo un objeto gráfico legible sobre la tarjeta. */
+  --color-estrella: #bd7f05;
+
+  /*
+   * Un color por grupo de categoría (`categories.group_name`). Es el tinte
+   * de cada ficha: codifica información que ya existe en la base, no es
+   * decoración. Ver `lib/category-groups.ts`.
+   *
+   * Con una paleta de una sola familia, los cinco se separan por
+   * LUMINOSIDAD, no por tono. Están ordenados de más oscuro a más claro a
+   * propósito; si alguien mete dos vecinos de la rampa en grupos distintos,
+   * la lista deja de agrupar de un vistazo.
+   */
+  --color-grupo-hogar: #0c6478;
+  --color-grupo-limpieza: #09d1c7;
+  --color-grupo-exterior: #46dfb1;
+  --color-grupo-comunidad: #213a58;
+  --color-grupo-otros: #15919b;
+
+  /*
+   * La tinta de cada grupo: qué color va ENCIMA de ese tono a plena
+   * saturación (el ícono del chip, sobre todo).
+   *
+   * Existe porque la rampa cruza el umbral de luminosidad en el medio:
+   * blanco sobre #46DFB1 da 1.5:1 y desaparece. Sin esta variable, la mitad
+   * de los grupos quedan con el ícono invisible.
+   */
+  --color-grupo-hogar-tinta: #fbfefd;
+  --color-grupo-limpieza-tinta: #213a58;
+  --color-grupo-exterior-tinta: #213a58;
+  --color-grupo-comunidad-tinta: #fbfefd;
+  --color-grupo-otros-tinta: #fbfefd;
 
   --font-sans: var(--font-public-sans), system-ui, sans-serif;
   --font-display: var(--font-bricolage), var(--font-public-sans), system-ui, sans-serif;
@@ -55,21 +101,31 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg-primary: #0b1512;
-    --color-bg-secondary: #14201c;
-    --color-text-primary: #eef2f0;
-    --color-text-secondary: #97a59e;
-    --color-border: #24322d;
+    /* En oscuro la rampa se invierte: el navy pasa de tinta a papel. */
+    --color-bg-primary: #1b3550;
+    --color-bg-secondary: #12253a;
+    --color-text-primary: #e4f7f1;
+    --color-text-secondary: #9dc3c6;
+    --color-border: #2e4e6e;
 
-    --color-urgencia: #ff7a45;
-    --color-urgencia-suave: #2a1810;
+    --color-urgencia: #ff8b4d;
+    --color-urgencia-suave: #3a2114;
     --color-estrella: #f0b429;
 
-    --color-grupo-hogar: #3fa583;
-    --color-grupo-limpieza: #57a8c9;
-    --color-grupo-exterior: #8cbf58;
-    --color-grupo-comunidad: #a68fd6;
-    --color-grupo-otros: #c4a06b;
+    /* Los tonos oscuros de la rampa no se ven contra un fondo navy, así que
+     * cada grupo sube a su versión clara. Todos quedan del lado claro, por
+     * eso todas las tintas pasan a navy. */
+    --color-grupo-hogar: #4fa9bf;
+    --color-grupo-limpieza: #2fe0d6;
+    --color-grupo-exterior: #80ee98;
+    --color-grupo-comunidad: #93b4d1;
+    --color-grupo-otros: #46dfb1;
+
+    --color-grupo-hogar-tinta: #12253a;
+    --color-grupo-limpieza-tinta: #12253a;
+    --color-grupo-exterior-tinta: #12253a;
+    --color-grupo-comunidad-tinta: #12253a;
+    --color-grupo-otros-tinta: #12253a;
   }
 }
 
@@ -106,5 +162,286 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * Superficies de vidrio
+ * ---------------------------------------------------------------------------
+ *
+ * El directorio se ve como la referencia que eligió el administrador:
+ * degradado de color detrás de todo y tarjetas translúcidas encima, cada una
+ * con el pastel de su grupo de servicio.
+ *
+ * Dos cosas que conviene entender antes de mover los números:
+ *
+ *  1. El degradado del fondo se arma con `--color-accent-primary`, que cada
+ *     comunidad pisa desde `TenantThemeProvider`. No es un fondo decorativo
+ *     igual para todas: la unidad que cargó su color se ve con su color. Ese
+ *     era el punto de darle color — en una unidad hay muchos gustos, y el que
+ *     manda es el de la comunidad, no el nuestro.
+ *
+ *  2. El texto se queda oscuro sobre los pasteles. El color entra por el
+ *     fondo, el borde y los íconos, que es de donde sale el look; ponerlo
+ *     también en el texto es lo que vuelve ilegible este estilo al sol.
+ */
+@theme {
+  --radio-ficha: 1.5rem;
+  --radio-panel: 1.25rem;
+  --radio-control: 0.875rem;
+
+  /* Sombras largas y suaves: es lo que separa la tarjeta del degradado. */
+  --sombra-ficha: 0 2px 6px rgba(15, 31, 26, 0.05), 0 12px 32px -14px rgba(15, 31, 26, 0.18);
+  --sombra-alta: 0 4px 10px rgba(15, 31, 26, 0.07), 0 24px 48px -18px rgba(15, 31, 26, 0.28);
+
+  /* Cuánto color del grupo entra en cada capa de la tarjeta. */
+  --tinte-fondo: 20%;
+  --tinte-fondo-activo: 28%;
+  --tinte-borde: 34%;
+
+  /* Vidrio: cuánto del blanco queda y cuánto se difumina lo de atrás. */
+  --vidrio-opacidad: 72%;
+  --vidrio-blur: 16px;
+  --vidrio-brillo: rgba(255, 255, 255, 0.55);
+
+  /* Intensidad de las manchas de color del fondo. */
+  --fondo-mancha: 34%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sombra-ficha: 0 2px 6px rgba(0, 0, 0, 0.35), 0 12px 32px -14px rgba(0, 0, 0, 0.6);
+    --sombra-alta: 0 4px 10px rgba(0, 0, 0, 0.4), 0 24px 48px -18px rgba(0, 0, 0, 0.75);
+
+    /* En oscuro el pastel no existe: el color tiene que subir para separarse
+     * del fondo casi negro, y el brillo del borde baja a un hilo. */
+    --tinte-fondo: 26%;
+    --tinte-fondo-activo: 34%;
+    --tinte-borde: 42%;
+    --vidrio-opacidad: 62%;
+    --vidrio-brillo: rgba(255, 255, 255, 0.1);
+    --fondo-mancha: 26%;
+  }
+}
+
+/*
+ * El degradado del fondo, en una capa fija propia.
+ *
+ * Va en un pseudo-elemento con `position: fixed` y no en `body` con
+ * `background-attachment: fixed`, que en iOS se sacude al hacer scroll.
+ * Queda detrás de todo y no intercepta ningún toque.
+ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--color-bg-secondary);
+  background-image:
+    radial-gradient(
+      70% 55% at 5% -10%,
+      color-mix(in oklab, var(--color-accent-primary) var(--fondo-mancha), transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      60% 45% at 100% 0%,
+      color-mix(in oklab, var(--color-grupo-limpieza) var(--fondo-mancha), transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      75% 55% at 60% 105%,
+      color-mix(in oklab, var(--color-menta) var(--fondo-mancha), transparent),
+      transparent 70%
+    );
+}
+
+/* El fondo lo pone la capa de arriba: el body tiene que dejarla ver. */
+html {
+  background-color: var(--color-bg-secondary);
+}
+
+body {
+  background-color: transparent;
+}
+
+@layer components {
+  /*
+   * Tarjeta de vidrio teñida por grupo.
+   *
+   * Recibe `--tinte` inline desde el componente
+   * (`style={{ '--tinte': colorDeGrupo(...) }}`). Sin `--tinte` queda un
+   * vidrio neutro, así que una categoría sin grupo nunca se ve rota.
+   *
+   * El estado base es OPACO a propósito. El vidrio se agrega después, en un
+   * `@supports`, por dos motivos: el fallback que genera Lightning CSS para
+   * un `color-mix` con variables es el color a plena saturación (fondo
+   * intenso con texto oscuro encima, ilegible), y `backdrop-filter` no
+   * existe en WebViews viejos. En los dos casos el resultado es una tarjeta
+   * sólida y legible en vez de una rota.
+   */
+  .ficha {
+    --tinte: var(--color-border);
+    --tinta: var(--color-text-primary);
+    position: relative;
+    border-radius: var(--radio-ficha);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    box-shadow: var(--sombra-ficha);
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      box-shadow 200ms ease,
+      transform 200ms ease;
+  }
+
+  /* Solo las tarjetas en las que se hace clic reaccionan. Un panel
+   * informativo que se levanta al pasar el mouse promete una acción que no
+   * existe. */
+  .ficha[data-interactiva]:hover,
+  .ficha[data-interactiva]:focus-within {
+    box-shadow: var(--sombra-alta);
+    transform: translateY(-3px);
+  }
+
+  /* El brillo del borde superior: es lo que hace que el vidrio se lea como
+   * vidrio y no como un rectángulo de color. */
+  .ficha::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: inset 0 1px 0 var(--vidrio-brillo);
+  }
+
+  /* Panel neutro: formularios, tablas, bloques de contenido. Mismo vidrio
+   * que la tarjeta, sin el tinte del grupo. */
+  .superficie {
+    border-radius: var(--radio-panel);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-primary);
+    box-shadow: var(--sombra-ficha);
+  }
+
+  @supports (color: color-mix(in oklab, red, red)) {
+    .ficha {
+      border-color: color-mix(in oklab, var(--tinte) var(--tinte-borde), var(--vidrio-brillo));
+      background-color: color-mix(
+        in oklab,
+        var(--tinte) var(--tinte-fondo),
+        var(--color-bg-primary)
+      );
+    }
+
+    .ficha[data-interactiva]:hover,
+    .ficha[data-interactiva]:focus-within {
+      background-color: color-mix(
+        in oklab,
+        var(--tinte) var(--tinte-fondo-activo),
+        var(--color-bg-primary)
+      );
+    }
+
+    .superficie {
+      background-color: color-mix(
+        in oklab,
+        var(--color-bg-primary) var(--vidrio-opacidad),
+        transparent
+      );
+      border-color: var(--vidrio-brillo);
+    }
+  }
+
+  /*
+   * El vidrio propiamente dicho: la tarjeta se vuelve translúcida y difumina
+   * el degradado que pasa por detrás.
+   *
+   * Queda fuera si el navegador no tiene `backdrop-filter`, y también si la
+   * persona pidió menos transparencia en su sistema — hay gente que la
+   * desactiva justamente porque el texto sobre fondos vivos le cuesta.
+   */
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    @media (prefers-reduced-transparency: no-preference) {
+      .ficha,
+      .superficie {
+        -webkit-backdrop-filter: blur(var(--vidrio-blur)) saturate(150%);
+        backdrop-filter: blur(var(--vidrio-blur)) saturate(150%);
+      }
+
+      .ficha {
+        background-color: color-mix(
+          in oklab,
+          var(--tinte) var(--tinte-fondo),
+          color-mix(in srgb, var(--color-bg-primary) var(--vidrio-opacidad), transparent)
+        );
+      }
+
+      .ficha[data-interactiva]:hover,
+      .ficha[data-interactiva]:focus-within {
+        background-color: color-mix(
+          in oklab,
+          var(--tinte) var(--tinte-fondo-activo),
+          color-mix(in srgb, var(--color-bg-primary) var(--vidrio-opacidad), transparent)
+        );
+      }
+    }
+  }
+
+  /*
+   * El dato al pie de la tarjeta (proveedores, opiniones, estado). Hereda el
+   * tinte de la tarjeta que la contiene, así que no hay que pasarle color.
+   */
+  .pastilla {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 999px;
+    padding: 0.3125rem 0.6875rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+  }
+
+  @supports (color: color-mix(in oklab, red, red)) {
+    .pastilla {
+      background-color: color-mix(
+        in oklab,
+        var(--tinte, var(--color-border)) 30%,
+        var(--color-bg-primary)
+      );
+    }
+  }
+
+  /*
+   * Campo de formulario. Comparte radio con la tarjeta pero se queda opaco:
+   * un control translúcido sobre un degradado le cambia el fondo al texto
+   * mientras alguien lo está escribiendo.
+   */
+  .campo {
+    border-radius: var(--radio-control);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: border-color 150ms ease;
+  }
+  .campo:focus,
+  .campo:focus-visible {
+    border-color: var(--color-text-primary);
+    outline: none;
+  }
+
+  /* El anillo de foco repetido en toda la app, en un solo lugar. */
+  .foco {
+    outline: none;
+  }
+  .foco:focus-visible {
+    outline: 2px solid var(--color-text-primary);
+    outline-offset: 2px;
   }
 }

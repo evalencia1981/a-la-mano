@@ -54,7 +54,7 @@ export default async function DirectoryPage({ params }: Props) {
         <Link
           href={`/${tenantSlug}/suggest`}
           data-tactil
-          className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          className="flex items-center gap-2 rounded-[var(--radio-control)] border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] foco"
         >
           <Plus className="h-4 w-4" />
           Sugerir uno
@@ -64,7 +64,7 @@ export default async function DirectoryPage({ params }: Props) {
       {urgencias.length > 0 && (
         <section
           aria-labelledby="urgencias"
-          className="rounded-xl px-4 py-3"
+          className="rounded-[var(--radio-panel)] px-4 py-3"
           style={{ backgroundColor: 'var(--color-urgencia-suave)' }}
         >
           <h2
@@ -91,7 +91,7 @@ export default async function DirectoryPage({ params }: Props) {
       )}
 
       {filas.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-[var(--color-border)] px-6 py-14 text-center">
+        <div className="rounded-[var(--radio-panel)] border border-dashed border-[var(--color-border)] px-6 py-14 text-center">
           <h2 className="font-display text-xl font-semibold">Empecemos por el primero</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
             Pensá en ese plomero o esa señora del aseo que todos en la unidad se pasan por
@@ -100,7 +100,7 @@ export default async function DirectoryPage({ params }: Props) {
           <Link
             href={`/${tenantSlug}/suggest`}
             data-tactil
-            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+            className="mt-5 inline-flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
           >
             <Plus className="h-4 w-4" />
             Sugerir un proveedor

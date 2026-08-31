@@ -40,7 +40,7 @@ export function InviteMemberForm({ tenantId }: { tenantId: string }) {
             id="role"
             name="role"
             defaultValue="member"
-            className="h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-sm"
+            className="h-11 w-full campo px-3.5 text-base sm:text-sm"
           >
             {TENANT_ROLES.map((r) => (
               <option key={r} value={r}>
@@ -54,7 +54,7 @@ export function InviteMemberForm({ tenantId }: { tenantId: string }) {
         </Button>
       </div>
       {status.kind === 'ok' && (
-        <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-3 text-sm">
+        <div className="rounded-[var(--radio-control)] border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-3 text-sm">
           <p className="text-[var(--color-success)] font-medium">Invitación creada.</p>
           {status.token && (
             <p className="mt-1 text-xs text-[var(--color-text-secondary)] break-all">

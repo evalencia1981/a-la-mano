@@ -173,7 +173,7 @@ export function BotonMicrofono({
       aria-pressed={escuchando}
       title={escuchando ? 'Dejar de dictar' : etiqueta}
       onClick={() => (escuchando ? detener() : arrancar())}
-      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)] disabled:opacity-40 ${
+      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radio-panel)] border-2 transition-colors foco disabled:opacity-40 ${
         escuchando
           ? 'animate-pulse border-transparent text-white'
           : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]'

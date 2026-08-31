@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Check, MapPin, Plus, Star, Users } from 'lucide-react';
 import { ProviderAvatar } from '@/components/provider/provider-avatar';
+import { estiloTinte } from '@/lib/category-groups';
 import { adoptarRecomendadoAction } from '@/server/actions/community-provider.actions';
 import type { Category, Provider, ProviderPhoto } from '@a-la-mano/db';
 
@@ -48,7 +49,10 @@ export function RecomendadoCard({
   }
 
   return (
-    <article className="flex overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
+    <article
+      style={estiloTinte(category.groupName)}
+      className="ficha flex overflow-hidden"
+    >
       <ProviderAvatar
         photo={primaryPhoto}
         category={category}
@@ -123,7 +127,7 @@ export function RecomendadoCard({
               data-tactil
               onClick={agregar}
               disabled={isPending}
-              className="flex items-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+              className="flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 foco"
             >
               <Plus className="h-4 w-4" />
               {isPending ? 'Agregando…' : 'Agregar al directorio'}

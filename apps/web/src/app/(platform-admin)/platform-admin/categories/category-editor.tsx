@@ -115,7 +115,7 @@ export function CategoryEditor({
           type="button"
           data-tactil
           onClick={abrirNueva}
-          className="flex items-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          className="flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
         >
           <Plus className="h-4 w-4" />
           Nueva categoría
@@ -127,7 +127,7 @@ export function CategoryEditor({
              quedarían con los datos de la anterior. */
           key={editando?.id ?? 'nueva'}
           action={guardar}
-          className="space-y-4 rounded-xl border-2 border-[var(--color-accent-primary)] bg-[var(--color-bg-primary)] p-4"
+          className="space-y-4 superficie border-2 border-[var(--color-accent-primary)] p-4"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -145,7 +145,7 @@ export function CategoryEditor({
               type="button"
               onClick={() => setFormulario(null)}
               aria-label="Cancelar"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radio-control)] text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -163,7 +163,7 @@ export function CategoryEditor({
                 maxLength={80}
                 defaultValue={editando?.name ?? ''}
                 placeholder="Manicura y pestañas"
-                className="h-11 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-[15px] outline-none transition-colors focus:border-[var(--color-text-primary)]"
+                className="h-11 w-full campo px-3 text-[15px] outline-none transition-colors focus:border-[var(--color-text-primary)]"
               />
             </div>
 
@@ -180,7 +180,7 @@ export function CategoryEditor({
                     value={grupo}
                     onChange={(e) => setGrupo(e.target.value)}
                     placeholder="Belleza y cuidado personal"
-                    className="h-11 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-[15px] outline-none transition-colors focus:border-[var(--color-text-primary)]"
+                    className="h-11 w-full campo px-3 text-[15px] outline-none transition-colors focus:border-[var(--color-text-primary)]"
                   />
                   <button
                     type="button"
@@ -188,7 +188,7 @@ export function CategoryEditor({
                       setGrupoNuevo(false);
                       setGrupo(editando?.groupName ?? grupos[0] ?? 'Otros');
                     }}
-                    className="shrink-0 rounded-lg px-2 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
+                    className="shrink-0 rounded-[var(--radio-control)] px-2 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
                   >
                     Cancelar
                   </button>
@@ -205,7 +205,7 @@ export function CategoryEditor({
                       setGrupo(e.target.value);
                     }
                   }}
-                  className="h-11 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-[15px] outline-none transition-colors focus:border-[var(--color-text-primary)]"
+                  className="h-11 w-full campo px-3 text-[15px] outline-none transition-colors focus:border-[var(--color-text-primary)]"
                 >
                   {gruposEnUso.map((g) => (
                     <option key={g} value={g}>
@@ -236,7 +236,7 @@ export function CategoryEditor({
               maxLength={300}
               defaultValue={editando?.description ?? ''}
               placeholder="Servicio a domicilio de uñas y pestañas"
-              className="h-11 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-[15px] outline-none transition-colors focus:border-[var(--color-text-primary)]"
+              className="h-11 w-full campo px-3 text-[15px] outline-none transition-colors focus:border-[var(--color-text-primary)]"
             />
           </div>
 
@@ -259,7 +259,7 @@ export function CategoryEditor({
                       aria-label={nombre}
                       aria-pressed={icono === nombre}
                       title={nombre}
-                      className={`overflow-hidden rounded-lg border-2 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)] ${
+                      className={`overflow-hidden rounded-[var(--radio-control)] border-2 transition-all foco ${
                         icono === nombre
                           ? 'border-[var(--color-text-primary)] scale-105'
                           : 'border-transparent opacity-55 hover:opacity-100'
@@ -289,14 +289,14 @@ export function CategoryEditor({
             type="submit"
             data-tactil
             disabled={isPending}
-            className="rounded-lg bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+            className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 foco"
           >
             {isPending ? 'Guardando…' : editando ? 'Guardar cambios' : 'Crear categoría'}
           </button>
         </form>
       )}
 
-      <div className="overflow-hidden rounded-xl border border-[var(--color-border)]">
+      <div className="overflow-hidden rounded-[var(--radio-panel)] border border-[var(--color-border)]">
         <div className="w-full overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-[var(--color-bg-secondary)] text-left text-[var(--color-text-secondary)]">
@@ -315,7 +315,7 @@ export function CategoryEditor({
                         photo={null}
                         category={c}
                         nombre={c.name}
-                        className="h-9 w-9 shrink-0 rounded-lg"
+                        className="h-9 w-9 shrink-0 rounded-[var(--radio-control)]"
                         tamañoIcono={18}
                       />
                       <div className="min-w-0">
@@ -335,7 +335,7 @@ export function CategoryEditor({
                         type="button"
                         onClick={() => abrirEdicion(c)}
                         disabled={isPending}
-                        className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+                        className="flex items-center gap-1.5 rounded-[var(--radio-control)] px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-40 foco"
                       >
                         <Pencil className="h-3.5 w-3.5" />
                         Editar
@@ -344,7 +344,7 @@ export function CategoryEditor({
                         type="button"
                         onClick={() => alternar(c)}
                         disabled={isPending}
-                        className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+                        className="rounded-[var(--radio-control)] px-2.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] disabled:opacity-40 foco"
                       >
                         {c.isActive ? 'Desactivar' : 'Activar'}
                       </button>

@@ -25,7 +25,7 @@ export function SettingsNav({ tenantSlug }: { tenantSlug: string }) {
             key={l.label}
             href={href}
             className={cn(
-              'shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-sm hover:bg-[var(--color-bg-secondary)] lg:block',
+              'shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 text-sm hover:bg-[var(--color-bg-secondary)] lg:block',
               active && 'bg-[var(--color-bg-secondary)] font-medium',
             )}
           >

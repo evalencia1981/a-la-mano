@@ -75,7 +75,7 @@ export function JoinLink({
   return (
     <div className="space-y-3">
       <div className="flex flex-col gap-2 sm:flex-row">
-        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-3 py-2.5">
+        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-[var(--radio-control)] border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-3 py-2.5">
           <Link2 className="h-4 w-4 shrink-0 text-[var(--color-text-secondary)]" aria-hidden />
           <code className="truncate text-sm">{enlace}</code>
         </div>
@@ -83,7 +83,7 @@ export function JoinLink({
           type="button"
           data-tactil
           onClick={copiar}
-          className="flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          className="flex shrink-0 items-center justify-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
         >
           {copiado ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copiado ? 'Copiado' : 'Copiar'}
@@ -107,7 +107,7 @@ export function JoinLink({
           type="button"
           onClick={rotar}
           disabled={isPending}
-          className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          className="flex items-center gap-2 rounded-[var(--radio-control)] border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-50 foco"
         >
           <RefreshCw className="h-4 w-4" />
           Generar enlace nuevo
@@ -116,7 +116,7 @@ export function JoinLink({
           type="button"
           onClick={alternar}
           disabled={isPending}
-          className="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text-primary)]"
+          className="rounded-[var(--radio-control)] border border-[var(--color-border)] px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-bg-secondary)] disabled:opacity-50 foco"
         >
           {habilitado ? 'Cerrar ingreso por enlace' : 'Reabrir ingreso por enlace'}
         </button>

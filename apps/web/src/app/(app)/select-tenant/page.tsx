@@ -38,7 +38,7 @@ export default async function SelectTenantPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-secondary)] px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-2xl space-y-6">
         <header className="text-center space-y-2">
           <h1 className="text-2xl font-semibold">Tus comunidades</h1>
@@ -96,7 +96,7 @@ export default async function SelectTenantPage({ searchParams }: Props) {
 
 function CreateTenantCard({ hasExisting }: { hasExisting: boolean }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-secondary)] px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>
