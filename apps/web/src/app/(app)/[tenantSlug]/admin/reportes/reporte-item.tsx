@@ -132,7 +132,7 @@ export function ReporteItem({
                   type="button"
                   disabled={isPending}
                   onClick={() => cambiar('resuelto', nota)}
-                  className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 disabled:opacity-50"
                 >
                   {isPending ? 'Guardando…' : 'Marcar resuelto'}
                 </button>

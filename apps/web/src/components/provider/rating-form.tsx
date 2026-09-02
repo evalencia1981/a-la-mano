@@ -82,7 +82,7 @@ export function RatingForm({
         type="submit"
         data-tactil
         disabled={isPending}
-        className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 foco"
+        className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 disabled:opacity-50 foco"
       >
         {isPending ? 'Guardando…' : initial ? 'Actualizar calificación' : 'Publicar calificación'}
       </button>

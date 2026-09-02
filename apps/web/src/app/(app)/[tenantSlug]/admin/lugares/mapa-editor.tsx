@@ -274,7 +274,7 @@ function SeccionTorres({
           data-tactil
           disabled={deshabilitado || !nombre.trim()}
           onClick={agregar}
-          className="flex h-11 items-center gap-1.5 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+          className="flex h-11 items-center gap-1.5 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           <Plus className="h-4 w-4" aria-hidden />
           Agregar

@@ -115,7 +115,7 @@ export function CategoryEditor({
           type="button"
           data-tactil
           onClick={abrirNueva}
-          className="flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
+          className="flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 foco"
         >
           <Plus className="h-4 w-4" />
           Nueva categoría
@@ -289,7 +289,7 @@ export function CategoryEditor({
             type="submit"
             data-tactil
             disabled={isPending}
-            className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 foco"
+            className="rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 disabled:opacity-50 foco"
           >
             {isPending ? 'Guardando…' : editando ? 'Guardar cambios' : 'Crear categoría'}
           </button>

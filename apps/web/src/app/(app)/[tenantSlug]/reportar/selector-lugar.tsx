@@ -2,8 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
-import { MapPin, Plus } from 'lucide-react';
+import { Check, ChevronDown, MapPin, Plus } from 'lucide-react';
 import { BotonMicrofono } from '@/components/shared/boton-microfono';
+import { estiloTinteColor } from '@/lib/category-groups';
 import { normalizarLugar } from '@/lib/location-types';
 import { crearLugarAction } from '@/server/actions/location.actions';
 
@@ -23,6 +24,18 @@ interface Props {
   esAdmin: boolean;
   torres: TorreConPisos[];
   zonas: OpcionLugar[];
+  /**
+   * Lugar ya elegido, para corregir un reporte. Al reportar van los dos en
+   * null y el selector arranca vacío.
+   *
+   * Son dos y no uno porque un reporte puede tener el lugar enganchado al
+   * mapa (`lugarIdInicial`) o escrito a mano cuando el lugar no existía
+   * (`textoInicial`). Quien corrige tiene que ver lo que había puesto, sea
+   * cual sea de los dos: si el selector abriera vacío, corregir la
+   * descripción borraría el lugar sin que nadie lo pidiera.
+   */
+  lugarIdInicial?: string | null;
+  textoInicial?: string | null;
 }
 
 /**
@@ -42,14 +55,28 @@ interface Props {
  *    agrega de un toque y sigue. Mandarlo a otra pantalla a mitad de un
  *    reporte es garantía de que no lo hace nunca.
  */
-export function SelectorLugar({ tenantId, esAdmin, torres, zonas }: Props) {
+export function SelectorLugar({
+  tenantId,
+  esAdmin,
+  torres,
+  zonas,
+  lugarIdInicial = null,
+  textoInicial = null,
+}: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const [lugarId, setLugarId] = useState<string | null>(null);
-  const [torreAbierta, setTorreAbierta] = useState<string | null>(null);
-  const [modoLibre, setModoLibre] = useState(false);
-  const [texto, setTexto] = useState('');
+  const [lugarId, setLugarId] = useState<string | null>(lugarIdInicial);
+  /* Si lo que venía elegido es un piso, la torre que lo contiene tiene que
+   * abrirse sola: si no, el chip marcado queda escondido y parece que no
+   * hubiera lugar. */
+  const [torreAbierta, setTorreAbierta] = useState<string | null>(
+    () => torres.find((t) => t.hijos.some((h) => h.id === lugarIdInicial))?.lugar.id ?? null,
+  );
+  /* Un lugar escrito a mano solo se puede volver a mostrar en el campo
+   * libre: no tiene chip donde marcarse. */
+  const [modoLibre, setModoLibre] = useState(Boolean(!lugarIdInicial && textoInicial));
+  const [texto, setTexto] = useState(textoInicial ?? '');
   const [error, setError] = useState<string | null>(null);
 
   /* Lo que se acaba de crear desde acá. Existe para que el chip aparezca
@@ -74,6 +101,23 @@ export function SelectorLugar({ tenantId, esAdmin, torres, zonas }: Props) {
     for (const z of zonasVisibles) claves.add(normalizarLugar(z.name));
     return claves;
   }, [torres, zonasVisibles]);
+
+  /*
+   * El lugar elegido, escrito entero.
+   *
+   * Se muestra aparte de los chips porque un piso dice solo "Piso 3": con
+   * la torre desplegada arriba se entiende, pero al bajar a la descripción
+   * ya no se ve, y la persona manda el reporte sin saber qué quedó puesto.
+   */
+  const elegido = useMemo(() => {
+    if (!lugarId) return null;
+    for (const t of torres) {
+      if (t.lugar.id === lugarId) return t.lugar.name;
+      const piso = t.hijos.find((h) => h.id === lugarId);
+      if (piso) return `${t.lugar.name} · ${piso.name}`;
+    }
+    return zonasVisibles.find((z) => z.id === lugarId)?.name ?? null;
+  }, [lugarId, torres, zonasVisibles]);
 
   const textoLimpio = texto.trim();
   const desconocido = textoLimpio.length > 1 && !clavesExistentes.has(normalizarLugar(textoLimpio));
@@ -118,13 +162,28 @@ export function SelectorLugar({ tenantId, esAdmin, torres, zonas }: Props) {
       <input type="hidden" name="locationId" value={lugarId ?? ''} />
       <input type="hidden" name="location" value={lugarId ? '' : textoLimpio} />
 
+      {elegido && (
+        <p
+          style={estiloTinteColor('var(--color-accent-primary)')}
+          className="ficha flex items-center gap-2 px-3 py-2 text-sm font-medium"
+        >
+          <MapPin
+            className="h-4 w-4 shrink-0"
+            style={{ color: 'var(--color-accent-primary)' }}
+            aria-hidden
+          />
+          {elegido}
+        </p>
+      )}
+
       {hayMapa && !modoLibre && (
         <>
           <div className="flex flex-wrap gap-1.5">
             {torres.map((t) => (
               <Chip
                 key={t.lugar.id}
-                activo={lugarId === t.lugar.id || torreAbierta === t.lugar.id}
+                activo={lugarId === t.lugar.id}
+                abierta={torreAbierta === t.lugar.id}
                 onClick={() => {
                   elegir(t.lugar.id);
                   setTorreAbierta((a) => (a === t.lugar.id ? null : t.lugar.id));
@@ -252,12 +311,25 @@ export function SelectorLugar({ tenantId, esAdmin, torres, zonas }: Props) {
   );
 }
 
+/**
+ * Un lugar del mapa.
+ *
+ * Lo elegido se tiñe con el acento de la comunidad y lleva anillo y tilde.
+ * Antes se marcaba con `bg-secondary`, que en modo oscuro es más oscuro que
+ * el borde de los no elegidos: el chip marcado se hundía en vez de resaltar
+ * y no se notaba que hubiera pasado algo al tocarlo.
+ *
+ * `abierta` es otra cosa que `activo`: la torre desplegada muestra la
+ * flecha, pero el anillo es solo del lugar que quedó elegido.
+ */
 function Chip({
   activo,
+  abierta = false,
   onClick,
   children,
 }: {
   activo: boolean;
+  abierta?: boolean;
   onClick: () => void;
   children: React.ReactNode;
 }) {
@@ -265,15 +337,28 @@ function Chip({
     <button
       type="button"
       data-tactil
+      data-interactiva
+      data-elegida={activo ? '' : undefined}
       onClick={onClick}
       aria-pressed={activo}
-      className={`rounded-full border-2 px-3 py-1.5 text-sm font-medium transition-colors foco ${
-        activo
-          ? 'border-[var(--color-text-primary)] bg-[var(--color-bg-secondary)]'
-          : 'border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)]'
-      }`}
+      aria-expanded={abierta || undefined}
+      style={estiloTinteColor('var(--color-accent-primary)')}
+      className="ficha foco flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium"
     >
+      {activo && (
+        <Check
+          className="h-3.5 w-3.5 shrink-0"
+          style={{ color: 'var(--color-accent-primary)' }}
+          aria-hidden
+        />
+      )}
       {children}
+      {abierta && (
+        <ChevronDown
+          className="h-3.5 w-3.5 shrink-0 text-[var(--color-text-secondary)]"
+          aria-hidden
+        />
+      )}
     </button>
   );
 }

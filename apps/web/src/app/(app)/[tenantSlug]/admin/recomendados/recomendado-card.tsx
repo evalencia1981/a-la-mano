@@ -127,7 +127,7 @@ export function RecomendadoCard({
               data-tactil
               onClick={agregar}
               disabled={isPending}
-              className="flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 foco"
+              className="flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-3 py-2 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 disabled:opacity-50 foco"
             >
               <Plus className="h-4 w-4" />
               {isPending ? 'Agregando…' : 'Agregar al directorio'}

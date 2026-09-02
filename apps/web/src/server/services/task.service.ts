@@ -8,7 +8,13 @@ import { auditService } from './audit.service';
 import { locationService } from './location.service';
 import { assertRole } from '@/lib/auth/guards';
 import { buscarLugar } from '@/lib/location-types';
-import { armarMensajeCotizacion, armarMensajeTarea, esEstadoTarea, exigeMotivo } from '@/lib/task-types';
+import {
+  armarMensajeCotizacion,
+  armarMensajeTarea,
+  esEstadoTarea,
+  exigeMotivo,
+  puedeCancelarVisita,
+} from '@/lib/task-types';
 import { enlaceDeTarea, generarTokenDeTarea, vencimientoDeEnlace } from '@/lib/task-token';
 import { getWhatsappUrl, getWhatsappUrlDeNumero } from '@/lib/contact';
 import { env } from '@/env';
@@ -521,6 +527,60 @@ export const taskService = {
       tenantId: fila.despacho.tenantId,
       status: estado,
       note: nota_,
+      authorLabel: fila.despacho.recipientLabel,
+    });
+
+    return { tarea };
+  },
+
+  /**
+   * Se cae la visita, pero el trabajo sigue en pie.
+   *
+   * Es la única forma en que quien ejecuta puede devolver una tarea a
+   * `pendiente`, y es una excepción angosta a propósito: solo desde
+   * `en_proceso`, o sea deshaciendo el "voy en camino" que dio él mismo. No
+   * puede reabrir algo que la administración suspendió ni desandar un
+   * trabajo terminado.
+   *
+   * Existe porque sin ella el que se cruzó con una urgencia tiene dos
+   * salidas y las dos son malas: suspender un trabajo que sí piensa hacer,
+   * o no avisar nada y que el pendiente figure "en proceso" toda la tarde
+   * mientras nadie va. Lo segundo es lo que pasa siempre, porque es gratis.
+   *
+   * El motivo es obligatorio por la misma razón que en `suspendido`: una
+   * visita caída sin explicación no le dice a la administración si tiene
+   * que reprogramar, insistir o llamar a otro.
+   */
+  async cancelarVisitaPorToken(token: string, motivo: string): Promise<{ tarea: Task }> {
+    const fila = await taskRepository.findByToken(token);
+    if (!fila) throw new Error('Este enlace no es válido.');
+
+    const { motivo: bloqueo } = evaluarEnlace(fila.despacho, fila.tarea);
+    if (bloqueo) throw new Error(bloqueo);
+
+    if (!puedeCancelarVisita(fila.tarea.status)) {
+      throw new Error(
+        'Solo se puede cancelar una visita que está en camino. Si no vas a poder hacer el trabajo, usá "No lo puedo hacer".',
+      );
+    }
+
+    const razon = motivo.trim();
+    if (!razon) throw new Error('Contá por qué no vas a poder ir.');
+
+    const tarea = await taskRepository.update(fila.tarea.id, {
+      status: 'pendiente',
+      resolvedAt: null,
+      resolvedBy: null,
+    });
+
+    /* La nota dice que fue una visita cancelada y no un cambio de estado
+     * cualquiera: en la bitácora, un "Pendiente" suelto después de un "En
+     * proceso" no cuenta lo que pasó. */
+    await taskRepository.addUpdate({
+      taskId: fila.tarea.id,
+      tenantId: fila.despacho.tenantId,
+      status: 'pendiente',
+      note: `Canceló la visita: ${razon}`,
       authorLabel: fila.despacho.recipientLabel,
     });
 

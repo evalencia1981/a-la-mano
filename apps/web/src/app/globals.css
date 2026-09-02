@@ -41,6 +41,16 @@
   --color-accent-primary: #0c6478;
   --color-accent-secondary: #15919b;
 
+  /*
+   * Lo que va ENCIMA del acento: el texto de un botón, el ícono de un chip.
+   *
+   * Es una variable y no `text-white` fijo porque el acento cambia con el
+   * modo. En oscuro el acento tiene que aclararse para verse contra el
+   * navy, y blanco sobre turquesa claro da 1.9:1 — el botón quedaría con la
+   * letra lavada.
+   */
+  --color-accent-ink: #fbfefd;
+
   /* Menta de la rampa. Solo para el degradado del fondo y lavados grandes:
    * como color de texto o de ícono chico no llega a contraste. */
   --color-menta: #80ee98;
@@ -107,6 +117,16 @@
     --color-text-primary: #e4f7f1;
     --color-text-secondary: #9dc3c6;
     --color-border: #2e4e6e;
+
+    /*
+     * El acento se aclara en oscuro, y no es cosmético: se usa como color
+     * de ícono y de texto en once lugares (el aviso de sugerencias, el
+     * "agregar al mapa", los bordes de lo elegido). El #0c6478 del modo
+     * claro sobre el navy da 1.9:1 y ahí simplemente no se ve nada.
+     */
+    --color-accent-primary: #09d1c7;
+    --color-accent-secondary: #46dfb1;
+    --color-accent-ink: #12253a;
 
     --color-urgencia: #ff8b4d;
     --color-urgencia-suave: #3a2114;
@@ -443,5 +463,52 @@ body {
   .foco:focus-visible {
     outline: 2px solid var(--color-text-primary);
     outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /*
+   * Lo que está elegido.
+   *
+   * Antes lo marcado se pintaba con `bg-secondary` y un borde del color del
+   * texto. Con la paleta actual eso falla en oscuro: `bg-secondary`
+   * (#12253a) es MÁS oscuro que el borde de los no elegidos (#2e4e6e), así
+   * que el elegido se hundía en vez de resaltar y parecía que no se hubiera
+   * marcado nada.
+   *
+   * Ahora lo elegido sube de tinte, se le pinta el borde con el color pleno
+   * y se levanta con la sombra alta. Las tres capas empujan para el mismo
+   * lado, y el texto sigue siendo el de la página — sobre un tinte al 28%
+   * eso da 8:1 largos, de día y de noche.
+   *
+   * El anillo va como `box-shadow` interior y no como `border-width: 2px`
+   * ni como `outline`: el borde grueso movería el contenido un pixel al
+   * marcar, y el outline se lo pelearía con el anillo de foco de `.foco`.
+   */
+  .ficha[data-elegida] {
+    box-shadow: var(--sombra-alta), inset 0 0 0 2px var(--tinte);
+    border-color: var(--tinte);
+  }
+
+  @supports (color: color-mix(in oklab, red, red)) {
+    .ficha[data-elegida] {
+      background-color: color-mix(
+        in oklab,
+        var(--tinte) var(--tinte-fondo-activo),
+        var(--color-bg-primary)
+      );
+    }
+  }
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    @media (prefers-reduced-transparency: no-preference) {
+      .ficha[data-elegida] {
+        background-color: color-mix(
+          in oklab,
+          var(--tinte) var(--tinte-fondo-activo),
+          color-mix(in srgb, var(--color-bg-primary) var(--vidrio-opacidad), transparent)
+        );
+      }
+    }
   }
 }

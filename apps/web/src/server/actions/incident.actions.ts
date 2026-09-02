@@ -33,6 +33,25 @@ export async function crearReporteAction(
   }
 }
 
+export async function editarReporteAction(
+  tenantId: string,
+  reporteId: string,
+  formData: FormData,
+): Promise<ActionResult<{ reporte: IncidentReport }>> {
+  try {
+    const reporte = await incidentService.editar(tenantId, reporteId, {
+      type: String(formData.get('type') ?? ''),
+      locationId: (formData.get('locationId') as string) || null,
+      location: (formData.get('location') as string) || null,
+      description: (formData.get('description') as string) || null,
+    });
+    await revalidar(tenantId);
+    return ok({ reporte });
+  } catch (error) {
+    return fail(error);
+  }
+}
+
 export async function cambiarEstadoReporteAction(
   tenantId: string,
   reporteId: string,

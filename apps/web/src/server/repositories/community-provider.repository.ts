@@ -18,6 +18,12 @@ export interface CommunityProviderListFilters {
   categoryId?: string;
   includeInactive?: boolean;
   limit?: number;
+  /**
+   * Cuántas opiniones hacen falta para que el promedio cuente. Lo pasa el
+   * service desde `MINIMO_CALIFICACIONES`; el default está solo para que
+   * una llamada suelta no ordene distinto sin querer.
+   */
+  minimoCalificaciones?: number;
 }
 
 export interface CommunityProviderRow {
@@ -40,7 +46,13 @@ export const communityProviderRepository = {
     tenantId: string,
     filters: CommunityProviderListFilters = {},
   ): Promise<CommunityProviderRow[]> {
-    const { query, categoryId, includeInactive = false, limit = 100 } = filters;
+    const {
+      query,
+      categoryId,
+      includeInactive = false,
+      limit = 100,
+      minimoCalificaciones = 3,
+    } = filters;
     const conditions = [eq(communityProviders.tenantId, tenantId)];
     if (!includeInactive) conditions.push(eq(communityProviders.isActive, true));
     if (categoryId) conditions.push(eq(providers.categoryId, categoryId));
@@ -65,17 +77,28 @@ export const communityProviderRepository = {
       /*
        * Orden del directorio:
        *
-       *  1. Primero los calificados. `desc` en Postgres pone los nulos
+       *  1. Primero los AVALADOS, o sea los que llegaron al mínimo de
+       *     opiniones. Es el paso que faltaba y el que más cambia la lista:
+       *     sin él, un 5.00 de una sola persona encabeza el directorio por
+       *     encima de un 4.60 de veinte. Es el mismo criterio que ya usaba
+       *     `compararPorCalificacion` cuando el administrador elige a quién
+       *     despacharle un trabajo — la lista del vecino ordenaba de otra
+       *     forma que la del administrador, y las dos responden la misma
+       *     pregunta: a quién llamo.
+       *  2. Mejor promedio arriba. `desc` en Postgres pone los nulos
        *     adelante, así que sin `nulls last` un proveedor recién agregado
        *     encabezaría la lista sin una sola opinión.
-       *  2. Mejor promedio arriba.
        *  3. A igual promedio, primero el que tiene más opiniones: 5.00 con
-       *     diez respalda mucho más que 5.00 con una. Antes desempataba el
-       *     orden alfabético, o sea el azar.
+       *     diez respalda mucho más que 5.00 con una.
        *  4. El nombre solo como último recurso, para que el orden sea
        *     estable entre cargas.
+       *
+       * El orden importa más de lo que parece en el tablero: ahí se piden
+       * solo cuatro, así que esto no decide en qué posición se muestran
+       * sino CUÁLES se muestran.
        */
       .orderBy(
+        sql`(${communityProviders.ratingCount} >= ${minimoCalificaciones}) desc`,
         sql`${communityProviders.ratingAverage} desc nulls last`,
         desc(communityProviders.ratingCount),
         providers.name,

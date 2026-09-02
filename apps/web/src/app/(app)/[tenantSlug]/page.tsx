@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronRight, Grid2x2, Plus, Search, Sparkles, Star } from 'lucide-react';
+import { ChevronRight, Grid2x2, Plus, Search, Sparkles, Star, type LucideIcon } from 'lucide-react';
 import { ProviderCard } from '@/components/provider/provider-card';
 import { OnboardingChecklist } from '@/components/wizard/onboarding-checklist';
 import { getCurrentTenant } from '@/lib/auth/current-tenant';
 import { getCurrentUser } from '@/lib/auth/current-user';
 import { esUrgencia, estiloTinteColor } from '@/lib/category-groups';
+import { MINIMO_CALIFICACIONES } from '@/lib/rating';
 import { categoryService } from '@/server/services/category.service';
 import { communityProviderService } from '@/server/services/community-provider.service';
 import { suggestionService } from '@/server/services/suggestion.service';
@@ -41,6 +42,7 @@ export default async function CommunityDashboardPage({ params }: Props) {
   const urgencias = destacados.filter((f) =>
     esUrgencia(categoriaPorId.get(f.provider.categoryId)?.slug),
   );
+  const hayCalificados = destacados.some((f) => f.communityProvider.ratingCount > 0);
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">
@@ -63,6 +65,32 @@ export default async function CommunityDashboardPage({ params }: Props) {
           {total} {total === 1 ? 'proveedor' : 'proveedores'}
         </span>
       </Link>
+
+      {/* Las otras dos puertas de entrada, al lado del buscador.
+       *
+       * Estaban al pie, después de las fichas de los mejor calificados: en un
+       * teléfono eso es tres pantallas de scroll, y la mitad de la gente no
+       * llegaba nunca. Sugerir un proveedor es lo único que hace crecer el
+       * directorio — si no se ve, el directorio se queda en lo que cargó el
+       * administrador el primer día. */}
+      <div className="grid grid-cols-2 gap-3">
+        <Atajo
+          href={`/${tenantSlug}/directory/categories`}
+          icono={Grid2x2}
+          color="var(--color-grupo-limpieza)"
+          tinta="var(--color-grupo-limpieza-tinta)"
+          titulo="Ver por categoría"
+          detalle="Plomería, aseo, jardinería…"
+        />
+        <Atajo
+          href={`/${tenantSlug}/suggest`}
+          icono={Plus}
+          color="var(--color-accent-primary)"
+          tinta="var(--color-accent-ink)"
+          titulo="Sugerir proveedor"
+          detalle="Ese que ya te resolvió a vos"
+        />
+      </div>
 
       {isAdmin && (
         <OnboardingChecklist
@@ -141,6 +169,19 @@ export default async function CommunityDashboardPage({ params }: Props) {
           )}
         </div>
 
+        {/* Por qué están en este orden.
+         *
+         * Sin la explicación, el vecino ve un 4.6 arriba de un 5.0 y piensa
+         * que la app se equivocó. Y el número sale de `MINIMO_CALIFICACIONES`
+         * y no escrito a mano: el día que el umbral cambie, este texto no
+         * puede quedar contando otra cosa que la que hace el orden. */}
+        {hayCalificados && (
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            Primero los que ya tienen {MINIMO_CALIFICACIONES} opiniones o más. Un 5.0 de una
+            sola persona dice menos que un 4.6 de veinte.
+          </p>
+        )}
+
         {destacados.length === 0 ? (
           <div className="rounded-[var(--radio-ficha)] border border-dashed border-[var(--color-border)] px-6 py-12 text-center">
             <h3 className="font-display text-lg font-semibold">Empecemos por el primero</h3>
@@ -151,7 +192,7 @@ export default async function CommunityDashboardPage({ params }: Props) {
             <Link
               href={isAdmin ? `/${tenantSlug}/admin/providers/new` : `/${tenantSlug}/suggest`}
               data-tactil
-              className="mt-5 inline-flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
+              className="mt-5 inline-flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 foco"
             >
               <Plus className="h-4 w-4" />
               {isAdmin ? 'Agregar el primero' : 'Sugerir un proveedor'}
@@ -173,36 +214,53 @@ export default async function CommunityDashboardPage({ params }: Props) {
           </div>
         )}
       </section>
-
-      <div className="flex flex-wrap gap-2">
-        <AccionSecundaria href={`/${tenantSlug}/directory/categories`} icono={<Grid2x2 className="h-4 w-4" />}>
-          Ver por categoría
-        </AccionSecundaria>
-        <AccionSecundaria href={`/${tenantSlug}/suggest`} icono={<Plus className="h-4 w-4" />}>
-          Sugerir proveedor
-        </AccionSecundaria>
-      </div>
     </div>
   );
 }
 
-function AccionSecundaria({
+/**
+ * Una de las puertas de entrada del directorio.
+ *
+ * Lleva su color y una línea que dice qué hay del otro lado: "Sugerir
+ * proveedor" a secas no le dice nada a un vecino que nunca sugirió nada.
+ */
+function Atajo({
   href,
-  icono,
-  children,
+  icono: Icono,
+  color,
+  tinta,
+  titulo,
+  detalle,
 }: {
   href: string;
-  icono: React.ReactNode;
-  children: React.ReactNode;
+  icono: LucideIcon;
+  color: string;
+  /** Lo que se lee encima de `color` a saturación plena. */
+  tinta: string;
+  titulo: string;
+  detalle: string;
 }) {
   return (
     <Link
       href={href}
       data-tactil
-      className="superficie foco flex items-center gap-2 rounded-[var(--radio-control)] px-3.5 py-2.5 text-sm font-medium transition-shadow hover:shadow-[var(--sombra-alta)]"
+      data-interactiva
+      style={estiloTinteColor(color)}
+      className="ficha foco flex h-full flex-col gap-2.5 p-4"
     >
-      {icono}
-      {children}
+      <span
+        aria-hidden
+        className="flex h-10 w-10 items-center justify-center rounded-[var(--radio-control)]"
+        style={{ backgroundColor: color, color: tinta }}
+      >
+        <Icono className="h-5 w-5" />
+      </span>
+      <span>
+        <span className="block font-display text-base font-semibold leading-tight">{titulo}</span>
+        <span className="mt-0.5 block text-xs leading-snug text-[var(--color-text-secondary)]">
+          {detalle}
+        </span>
+      </span>
     </Link>
   );
 }

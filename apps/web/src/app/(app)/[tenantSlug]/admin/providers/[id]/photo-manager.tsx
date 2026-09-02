@@ -107,7 +107,7 @@ export function PhotoManager({
                   className="aspect-video w-full object-cover"
                 />
                 {p.isPrimary && (
-                  <span className="absolute left-2 top-2 rounded-full bg-[var(--color-accent-primary)] px-2 py-0.5 text-[11px] font-semibold text-white">
+                  <span className="absolute left-2 top-2 rounded-full bg-[var(--color-accent-primary)] px-2 py-0.5 text-[11px] font-semibold text-[var(--color-accent-ink)]">
                     Principal
                   </span>
                 )}

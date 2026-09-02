@@ -112,6 +112,25 @@ export async function actualizarTareaPorEnlaceAction(
 }
 
 /**
+ * Cancela la visita desde el enlace público. Misma autorización que
+ * `actualizarTareaPorEnlaceAction` — el token y nada más — y por eso
+ * tampoco acepta un tenant ni un id de tarea: la tarea la resuelve el
+ * token.
+ */
+export async function cancelarVisitaPorEnlaceAction(
+  token: string,
+  motivo: string,
+): Promise<ActionResult<{ tarea: Task }>> {
+  try {
+    const resultado = await taskService.cancelarVisitaPorToken(token, motivo);
+    revalidatePath(`/tarea/${token}`);
+    return ok(resultado);
+  } catch (error) {
+    return fail(error);
+  }
+}
+
+/**
  * Le pide cotización a un proveedor del directorio y devuelve el WhatsApp
  * listo para abrir. Misma mecánica que el despacho a un puesto, con otro
  * texto: al proveedor no se le da una orden, se le pide precio.

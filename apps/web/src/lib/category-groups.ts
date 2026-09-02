@@ -12,6 +12,8 @@
 
 import type * as React from 'react';
 
+import { tintaSobre } from './contraste';
+
 export type GrupoCategoria = 'hogar' | 'limpieza' | 'exterior' | 'comunidad' | 'otros';
 
 const POR_NOMBRE: Record<string, GrupoCategoria> = {
@@ -52,37 +54,6 @@ function indiceDeColor(texto: string): number {
     acumulado = (acumulado * 31 + texto.charCodeAt(i)) % 100000;
   }
   return acumulado % PALETA_EXTRA.length;
-}
-
-/*
- * Los dos extremos de la rampa, en valor absoluto.
- *
- * No son `var(--color-text-primary)` ni `var(--color-bg-primary)` a
- * propósito: esos se invierten en modo oscuro, y la tinta tiene que
- * depender del color que tiene DEBAJO, no del modo. Un chip aguamarina
- * lleva tinta navy de día y de noche.
- */
-const TINTA_OSCURA = '#213a58';
-const TINTA_CLARA = '#fbfefd';
-
-/**
- * Luminancia relativa de un hex (fórmula de WCAG). Se usa para decidir la
- * tinta de los colores que no están en el catálogo: los grupos nuevos y,
- * más adelante, cualquier color que cargue una comunidad.
- */
-function luminancia(hex: string): number {
-  const limpio = hex.replace('#', '');
-  const canal = (i: number) => {
-    const v = Number.parseInt(limpio.slice(i, i + 2), 16) / 255;
-    return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
-  };
-  return 0.2126 * canal(0) + 0.7152 * canal(2) + 0.0722 * canal(4);
-}
-
-/** Tinta legible sobre un color dado. El umbral está donde la rampa cruza. */
-export function tintaSobre(color: string): string {
-  if (!color.startsWith('#')) return TINTA_CLARA;
-  return luminancia(color) > 0.35 ? TINTA_OSCURA : TINTA_CLARA;
 }
 
 const ETIQUETA_CORTA: Record<GrupoCategoria, string> = {

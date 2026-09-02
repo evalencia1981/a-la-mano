@@ -83,7 +83,7 @@ export function JoinLink({
           type="button"
           data-tactil
           onClick={copiar}
-          className="flex shrink-0 items-center justify-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
+          className="flex shrink-0 items-center justify-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 foco"
         >
           {copiado ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copiado ? 'Copiado' : 'Copiar'}

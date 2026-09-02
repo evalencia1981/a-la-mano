@@ -135,3 +135,39 @@ export function armarMensajeTarea({
     `Podés ver el detalle y avisar cuando esté hecho acá: ${enlace}`,
   ].join('\n');
 }
+
+/**
+ * Cancelar la visita no es lo mismo que no poder hacer el trabajo.
+ *
+ * "No lo puedo hacer" suspende: el trabajo se frena y la administración
+ * tiene que reactivarlo o buscar a otro. Cancelar la visita devuelve el
+ * pendiente a `pendiente`: lo que se cayó es la ida de hoy, no el encargo.
+ * Sin esa diferencia, el que dijo "voy en camino" a las nueve y a las once
+ * se cruzó con una urgencia tiene dos salidas malas — suspender un trabajo
+ * que sí piensa hacer, o no avisar nada y que la administración lo dé por
+ * en camino toda la tarde.
+ *
+ * Solo se puede si la tarea está `en_proceso`, y esa restricción es el
+ * motivo por el que no contradice la regla de que quien ejecuta no devuelve
+ * una tarea a `pendiente`: no está empezando de cero, está retirando un
+ * compromiso que dio él mismo.
+ */
+export function puedeCancelarVisita(estado: string): boolean {
+  return estado === 'en_proceso';
+}
+
+/**
+ * Los motivos de siempre, para tocar uno en vez de escribirlo.
+ *
+ * Esto se responde de pie, en la calle, muchas veces manejando. Si cancelar
+ * exige teclear, la salida barata vuelve a ser no avisar — y un pendiente
+ * que quedó "en proceso" sin que nadie vaya es peor que uno cancelado.
+ * El campo libre sigue estando: la lista cubre lo común, no lo raro.
+ */
+export const MOTIVOS_CANCELACION = [
+  'Me surgió una urgencia',
+  'No me alcanza el tiempo hoy',
+  'No tengo el repuesto',
+  'No pude entrar a la unidad',
+  'Estoy enfermo',
+] as const;

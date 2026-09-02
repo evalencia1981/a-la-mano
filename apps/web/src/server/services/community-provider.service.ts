@@ -21,7 +21,10 @@ export type AddProviderInput = z.input<typeof addProviderSchema>;
 export const communityProviderService = {
   async listInTenant(tenantId: string, filters: CommunityProviderListFilters = {}) {
     await assertTenantMember(tenantId);
-    return communityProviderRepository.listByTenant(tenantId, filters);
+    return communityProviderRepository.listByTenant(tenantId, {
+      minimoCalificaciones: MINIMO_CALIFICACIONES,
+      ...filters,
+    });
   },
 
   /** Total de proveedores activos. Para contadores de UI. */
@@ -43,6 +46,7 @@ export const communityProviderService = {
   async listInTenantAdmin(tenantId: string, filters: CommunityProviderListFilters = {}) {
     await assertRole(tenantId, ['owner', 'admin']);
     return communityProviderRepository.listByTenant(tenantId, {
+      minimoCalificaciones: MINIMO_CALIFICACIONES,
       ...filters,
       includeInactive: true,
     });

@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { contraste, tintaSobre } from '@/lib/contraste';
 import { updateBrandingAction } from '@/server/actions/tenant.actions';
 import type { Tenant } from '@a-la-mano/db';
 
@@ -69,6 +70,8 @@ export function BrandingForm({ tenant, disabled }: { tenant: Tenant; disabled: b
         />
       </div>
 
+      <VistaPrevia color={primary} />
+
       {status.kind === 'ok' && <p className="text-sm text-[var(--color-success)]">Guardado.</p>}
       {status.kind === 'error' && (
         <p className="text-sm text-[var(--color-error)]">{status.message}</p>
@@ -77,6 +80,50 @@ export function BrandingForm({ tenant, disabled }: { tenant: Tenant; disabled: b
         {isPending ? 'Guardando...' : 'Guardar'}
       </Button>
     </form>
+  );
+}
+
+/**
+ * Cómo se va a ver el color elegido en un botón.
+ *
+ * El color primario termina de fondo en todos los botones de acción de la
+ * comunidad, y hasta acá se elegía a ciegas: se veía el cuadradito y nada
+ * más. Una unidad quedó con el botón "Guardar" en morado oscuro y la letra
+ * ilegible sin que nadie pudiera darse cuenta antes de guardar.
+ *
+ * La letra ya no se elige a mano —`tintaSobre` toma la que mejor contrasta
+ * de las dos—, pero hay colores donde ninguna de las dos alcanza: un tono
+ * medio deja el texto en 3.6:1 se ponga blanco o navy. Eso no lo arregla la
+ * tinta, lo arregla elegir otro color, y para eso hay que verlo.
+ */
+function VistaPrevia({ color }: { color: string }) {
+  const tinta = tintaSobre(color);
+  const razon = contraste(color, tinta);
+  /* 4.5:1 es el mínimo de WCAG AA para texto de tamaño normal. */
+  const flojo = razon < 4.5;
+
+  return (
+    <div className="space-y-2">
+      <Label>Cómo se ven los botones</Label>
+      <div className="flex flex-wrap items-center gap-3">
+        <span
+          className="inline-flex h-11 items-center rounded-[var(--radio-control)] px-4 text-sm font-medium"
+          style={{ backgroundColor: color, color: tinta }}
+        >
+          Guardar cambios
+        </span>
+        <span className="tabular text-xs text-[var(--color-text-secondary)]">
+          contraste {razon.toFixed(1)}:1
+        </span>
+      </div>
+      {flojo && (
+        <p className="text-xs text-[var(--color-warning)]">
+          Con este color la letra queda en {razon.toFixed(1)}:1, por debajo del mínimo legible
+          de 4.5:1. Probá un tono más oscuro o más claro — los intermedios son los que no
+          funcionan con ninguna letra.
+        </p>
+      )}
+    </div>
   );
 }
 

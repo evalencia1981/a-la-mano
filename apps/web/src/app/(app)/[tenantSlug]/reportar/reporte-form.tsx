@@ -3,11 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Check, Send } from 'lucide-react';
-import { iconoDe } from '@/lib/category-icons';
-import { TIPOS_INCIDENTE, type TipoIncidente } from '@/lib/incident-types';
+import { type TipoIncidente } from '@/lib/incident-types';
 import { crearReporteAction } from '@/server/actions/incident.actions';
 import { BotonMicrofono } from '@/components/shared/boton-microfono';
 import { SelectorLugar, type OpcionLugar, type TorreConPisos } from './selector-lugar';
+import { SelectorTipo } from './selector-tipo';
 
 /**
  * Reportar algo que pasó en la comunidad.
@@ -84,33 +84,12 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
     );
   }
 
-  const riesgos = TIPOS_INCIDENTE.filter((t) => t.gravedad === 'riesgo');
-  const convivencia = TIPOS_INCIDENTE.filter((t) => t.gravedad === 'convivencia');
-
   return (
     <form action={enviar} className="space-y-6">
-      <fieldset className="space-y-4">
-        <legend className="font-display text-lg font-semibold">¿Qué pasó?</legend>
-
-        <Grupo titulo="Riesgo de accidente" destacado>
-          {riesgos.map((t) => (
-            <Opcion key={t.slug} tipo={t} activo={tipo?.slug === t.slug} onClick={() => setTipo(t)} />
-          ))}
-        </Grupo>
-
-        <Grupo titulo="Convivencia">
-          {convivencia.map((t) => (
-            <Opcion key={t.slug} tipo={t} activo={tipo?.slug === t.slug} onClick={() => setTipo(t)} />
-          ))}
-        </Grupo>
-      </fieldset>
+      <SelectorTipo valor={tipo} onCambio={setTipo} />
 
       {tipo && (
         <>
-          <p className="rounded-[var(--radio-control)] bg-[var(--color-bg-secondary)] px-3 py-2 text-sm text-[var(--color-text-secondary)]">
-            {tipo.ejemplo}
-          </p>
-
           <SelectorLugar
             tenantId={tenantId}
             esAdmin={esAdmin}
@@ -156,7 +135,7 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
         type="submit"
         data-tactil
         disabled={isPending || !tipo}
-        className="flex w-full items-center justify-center gap-2 rounded-[var(--radio-panel)] bg-[var(--color-accent-primary)] px-4 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 foco"
+        className="flex w-full items-center justify-center gap-2 rounded-[var(--radio-panel)] bg-[var(--color-accent-primary)] px-4 py-3.5 text-base font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 disabled:opacity-40 foco"
       >
         <Send className="h-4 w-4" />
         {isPending ? 'Enviando…' : 'Enviar reporte'}
@@ -166,64 +145,5 @@ export function ReporteForm({ tenantId, torres, zonas, esAdmin }: Props) {
         Se reporta el hecho, nunca a una persona. Tus vecinos no ven quién reportó.
       </p>
     </form>
-  );
-}
-
-function Grupo({
-  titulo,
-  destacado = false,
-  children,
-}: {
-  titulo: string;
-  destacado?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="space-y-2">
-      <span
-        className="text-[11px] font-bold uppercase tracking-wider"
-        style={{ color: destacado ? 'var(--color-urgencia)' : 'var(--color-text-secondary)' }}
-      >
-        {titulo}
-      </span>
-      <div className="grid grid-cols-2 gap-2">{children}</div>
-    </div>
-  );
-}
-
-function Opcion({
-  tipo,
-  activo,
-  onClick,
-}: {
-  tipo: TipoIncidente;
-  activo: boolean;
-  onClick: () => void;
-}) {
-  const Icono = iconoDe(tipo.icono);
-  return (
-    <button
-      type="button"
-      data-tactil
-      onClick={onClick}
-      aria-pressed={activo}
-      className={`flex items-center gap-2.5 rounded-[var(--radio-panel)] border-2 px-3 py-3 text-left text-sm font-medium transition-colors foco ${
-        activo
-          ? 'border-[var(--color-text-primary)] bg-[var(--color-bg-secondary)]'
-          : 'border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)]'
-      }`}
-    >
-      <Icono
-        className="h-5 w-5 shrink-0"
-        style={{
-          color:
-            tipo.gravedad === 'riesgo'
-              ? 'var(--color-urgencia)'
-              : 'var(--color-text-secondary)',
-        }}
-        aria-hidden
-      />
-      <span className="leading-tight">{tipo.label}</span>
-    </button>
   );
 }

@@ -183,7 +183,7 @@ export function Captura({
           data-tactil
           disabled={isPending || !texto.trim()}
           onClick={guardar}
-          className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-[var(--radio-panel)] bg-[var(--color-accent-primary)] px-4 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 sm:flex-none sm:text-sm"
+          className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-[var(--radio-panel)] bg-[var(--color-accent-primary)] px-4 text-base font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 disabled:opacity-40 sm:flex-none sm:text-sm"
         >
           <Plus className="h-4 w-4 shrink-0" aria-hidden />
           {isPending ? 'Guardando…' : 'Guardar'}

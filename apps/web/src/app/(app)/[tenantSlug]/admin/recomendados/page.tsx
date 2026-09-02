@@ -62,7 +62,7 @@ export default async function RecomendadosPage({ params }: Props) {
           <Link
             href={`/${tenantSlug}/settings`}
             data-tactil
-            className="mt-5 inline-flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 foco"
+            className="mt-5 inline-flex items-center gap-2 rounded-[var(--radio-control)] bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-medium text-[var(--color-accent-ink)] transition-opacity hover:opacity-90 foco"
           >
             <MapPin className="h-4 w-4" />
             Configurar ubicación

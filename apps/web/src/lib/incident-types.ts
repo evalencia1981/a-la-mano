@@ -106,3 +106,20 @@ export const ESTADOS_INCIDENTE = {
 } as const;
 
 export type EstadoIncidente = keyof typeof ESTADOS_INCIDENTE;
+
+/**
+ * Un reporte se puede editar mientras la administración no lo haya tomado.
+ *
+ * Vive acá y no en el service porque lo necesitan los dos lados: el
+ * servidor para rechazar la edición, y el cliente para decidir si muestra
+ * el botón. Tenerlo duplicado terminaría en que uno se ajusta y el otro
+ * queda viejo — y la versión vieja sería la que le ofrece al vecino un
+ * botón que el servidor le va a rechazar.
+ *
+ * El corte es `nuevo`. En cuanto pasa a "En gestión" hay alguien actuando
+ * sobre lo que dice el reporte: cambiarle el tipo o el lugar por debajo
+ * convierte el trabajo de esa persona en algo que ya no corresponde a nada.
+ */
+export function sePuedeEditar(status: string): boolean {
+  return status === 'nuevo';
+}
